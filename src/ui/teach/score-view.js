@@ -21,23 +21,17 @@ const keyLabel = (key) =>
 const percent = (value) =>
     formatNumber(value, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-function roundText({ round, result, follow, stopped }) {
+function followRoundText({ round, result, stopped }) {
     const label = t(
         stopped ? "teach.rounds.stoppedRound" : "teach.rounds.round",
         { round },
     );
-    const detail = follow
-        ? t("teach.rounds.follow", {
-              done: result.completed,
-              total: result.total,
-              waits: result.waits,
-              wrong: result.wrong,
-          })
-        : t("teach.rounds.rhythm", {
-              score: formatNumber(result.score),
-              accuracy: percent(result.accuracy),
-              combo: result.maxCombo,
-          });
+    const detail = t("teach.rounds.follow", {
+        done: result.completed,
+        total: result.total,
+        waits: result.waits,
+        wrong: result.wrong,
+    });
     return `${label} · ${detail}`;
 }
 
@@ -59,7 +53,9 @@ export function initTeachingScore(notice, peek) {
         best = 0,
         currentBlock = null;
     let emptyMessage = "teach.key.uploadFirst";
+    let followTotals = { completed: 0, total: 0, waits: 0, wrong: 0 };
     const loopMode = () => byId("teach-loop-mode").value || "count";
+    const isFollowMode = () => byId("teach-mode").value === "follow";
 
     function showKey(quarter) {
         const labels = model.lanes.map((lane) => {
@@ -118,10 +114,17 @@ export function initTeachingScore(notice, peek) {
 
     function controls(value = locked) {
         locked = value;
+        const follow = isFollowMode();
         for (const id of [
             "teach-loop-mode",
             "teach-loop-count",
             "teach-loop-gap",
+        ]) {
+            const input = byId(id);
+            input.closest("label").hidden = !follow;
+            input.disabled = !follow || locked || !model;
+        }
+        for (const id of [
             "teach-loop-start",
             "teach-loop-end",
             "teach-pick-a",
@@ -130,7 +133,7 @@ export function initTeachingScore(notice, peek) {
         ])
             byId(id).disabled = locked || !model;
         byId("teach-loop-count").disabled =
-            locked || !model || loopMode() !== "count";
+            !follow || locked || !model || loopMode() !== "count";
         byId("teach-score-prev").disabled = !model || page === 0;
         byId("teach-score-next").disabled =
             !model || (page + 1) * pageBars >= model.barCount;
@@ -503,6 +506,13 @@ export function initTeachingScore(notice, peek) {
 
     function plan() {
         if (!model) throw new AppError("errors.uploadAndChoose");
+        const range = {
+            ...teachingRange(model, start, end),
+            trackNames: model.lanes.map(
+                (lane) => `${lane.index + 1}. ${trackName(lane)}`,
+            ),
+        };
+        if (!isFollowMode()) return range;
         const count =
             loopMode() === "infinite"
                 ? Infinity
@@ -520,12 +530,8 @@ export function initTeachingScore(notice, peek) {
         if (![0, 1, 2].includes(gapBars))
             throw new AppError("errors.invalidGap");
         return {
-            ...teachingRange(model, start, end),
-            count,
-            gapMs: model.gapMs(start, gapBars),
-            trackNames: model.lanes.map(
-                (lane) => `${lane.index + 1}. ${trackName(lane)}`,
-            ),
+            ...range,
+            loop: { count, gapMs: model.gapMs(start, gapBars) },
         };
     }
 
@@ -569,39 +575,40 @@ export function initTeachingScore(notice, peek) {
         totalRounds = 0;
         accuracySum = 0;
         best = 0;
+        followTotals = { completed: 0, total: 0, waits: 0, wrong: 0 };
         byId("teach-round-results").hidden = true;
         byId("teach-round-history").replaceChildren();
     }
 
-    function recordRound(round, result, follow, stopped) {
-        const accuracy = follow
-            ? result.total
-                ? (result.completed / result.total) * 100
-                : 0
-            : result.accuracy;
+    function recordFollowRound(round, result, stopped) {
+        followTotals = {
+            completed: followTotals.completed + result.completed,
+            total: followTotals.total + result.total,
+            waits: followTotals.waits + result.waits,
+            wrong: followTotals.wrong + result.wrong,
+        };
+        const accuracy = result.total
+            ? (result.completed / result.total) * 100
+            : 0;
         totalRounds++;
         accuracySum += accuracy;
         best = Math.max(best, accuracy);
-        history.unshift({ round, result, follow, stopped });
+        history.unshift({ round, result, stopped });
         history = history.slice(0, HISTORY_LIMIT);
         byId("teach-round-results").hidden = false;
-        const summary = t(
-            follow
-                ? "teach.rounds.summaryFollow"
-                : "teach.rounds.summaryRhythm",
-            {
-                count: totalRounds,
-                best: percent(best),
-                average: percent(accuracySum / totalRounds),
-            },
-        );
+        const summary = t("teach.rounds.summaryFollow", {
+            count: totalRounds,
+            best: percent(best),
+            average: percent(accuracySum / totalRounds),
+        });
         byId("teach-round-summary").textContent =
             totalRounds > HISTORY_LIMIT
                 ? `${summary} · ${t("teach.rounds.recent", { count: HISTORY_LIMIT })}`
                 : summary;
         byId("teach-round-history").replaceChildren(
-            ...history.map((item) => el("div", roundText(item))),
+            ...history.map((item) => el("div", followRoundText(item))),
         );
+        return { ...followTotals };
     }
 
     if (typeof ResizeObserver === "function") {
@@ -611,5 +618,12 @@ export function initTeachingScore(notice, peek) {
         observer.observe(byId("teach-score-sheet"));
     }
     draw();
-    return { refresh, plan, position, controls, resetHistory, recordRound };
+    return {
+        refresh,
+        plan,
+        position,
+        controls,
+        resetHistory,
+        recordFollowRound,
+    };
 }

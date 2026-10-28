@@ -193,6 +193,7 @@
   "device": {
     "waiting": "Waiting for a keyboard",
     "unnamed": "Unnamed device",
+    "iosBluetoothAlternative": "This browser does not provide Web Bluetooth. You can try",
     "bluetoothPermissionHint": "Allow Bluetooth access in the browser prompt and select a device. If no device picker appears, allow Nearby devices in Android Settings → Apps → your browser → Permissions. Older Android versions may require Location permission. On a computer, check the browser's Bluetooth permission in system settings.",
     "connection": {
       "disconnected": "Disconnected",
@@ -478,7 +479,6 @@
       "completed": "Completed",
       "waits": "Waits",
       "wrong": "Wrong keys",
-      "firstRound": "Round 1",
       "round": "Round {round} / {total}"
     },
     "mapping": {
@@ -501,27 +501,20 @@
       "round": "Round {round}",
       "stoppedRound": "Round {round} (ended early)",
       "follow": "{done}/{total} done · waits: {waits} · wrong keys: {wrong}",
-      "rhythm": "{score} points · {accuracy}% · max combo {combo}",
       "summaryFollow": {
         "one": "{count} round · best completion {best}% · average {average}%",
         "other": "{count} rounds · best completion {best}% · average {average}%"
       },
-      "summaryRhythm": {
-        "one": "{count} round · best accuracy {best}% · average {average}%",
-        "other": "{count} rounds · best accuracy {best}% · average {average}%"
-      },
       "recent": "showing the latest {count}"
     },
     "results": {
-      "formula": "osu!lazer click-only scoring with no mods or bonuses, out of 1,000,000. Accuracy weights 300 / 100 / 50 / 0",
-      "stoppedTitle": "Session ended · round {round}",
-      "finishedTitle": "Practice complete · round {round}",
+      "formula": "Scoring based on osu!",
+      "rank": "Grade {rank}",
+      "stoppedTitle": "Session ended",
+      "finishedTitle": "Practice complete",
       "context": "{file} · {tracks} · {bpm} BPM.",
       "rhythmSummary": "Accuracy {accuracy} · max combo {combo} · OD {od}",
-      "followSummary": "Notes completed · waits: {waits} · wrong keys: {wrong}",
-      "followUntimed": "Follow mode is not scored on timing and does not count misses.",
-      "followStopped": "This round ended early.",
-      "followDone": "The selected range is complete.",
+      "followSummary": "Total notes completed · waits: {waits} · wrong keys: {wrong}",
       "noHits": "No notes were hit this time.",
       "early": "Hits were {error} ms early on average (calibration applied).",
       "late": "Hits were {error} ms late on average (calibration applied).",

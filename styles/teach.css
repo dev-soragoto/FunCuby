@@ -583,6 +583,14 @@
     color: var(--accent);
 }
 
+.teach-final-rank {
+    padding: 6px 12px;
+    border-radius: 8px;
+    background: var(--primary-soft);
+    color: var(--primary-text);
+    font: 700 32px var(--mono);
+}
+
 .teach-result-counts {
     display: flex;
     flex-wrap: wrap;

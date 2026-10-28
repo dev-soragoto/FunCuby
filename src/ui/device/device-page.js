@@ -33,9 +33,16 @@ export function initDevicePage({
     const accessError = bluetoothAccessError({
         bluetooth: transport.bluetooth,
     });
+    const isIOS =
+        /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+        (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
     const showAccessHint = (value, error = false) => {
         const hint = byId("bluetooth-access");
-        hint.textContent = translate(value);
+        const iosAlternative = isIOS && value?.key === "errors.ble.unavailable";
+        byId("bluetooth-access-message").textContent = iosAlternative
+            ? t("device.iosBluetoothAlternative")
+            : translate(value);
+        byId("bluetooth-ios-alternative").hidden = !iosAlternative;
         hint.hidden = !value;
         hint.classList.toggle("warning", error);
     };

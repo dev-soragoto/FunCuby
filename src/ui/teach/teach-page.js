@@ -34,6 +34,7 @@ import {
 import {
     hideResults,
     resetScore,
+    showFollowRound,
     showResults,
     showScore,
 } from "./results-view.js";
@@ -197,6 +198,7 @@ export function initTeachPage({
         for (const id of LOCKED_WHILE_RUNNING) byId(id).disabled = frozen;
         byId("teach-difficulty-picker").disabled = frozen || isFollowMode();
         byId("teach-difficulty-status").hidden = !isFollowMode();
+        byId("teach-round").hidden = !session?.loop;
         scoreView.controls(frozen || loading);
         byId("teach-map").disabled = frozen || !ready || playing;
         byId("teach-map").textContent = t(
@@ -229,9 +231,8 @@ export function initTeachPage({
         showScore({
             result: scorer().result,
             follow: !!session.practice,
-            round: session.round,
-            rounds: session.plan.count,
         });
+        if (session.practice) showFollowRound(session.loop);
     }
 
     function showHit(hit, animate = true) {
@@ -336,7 +337,8 @@ export function initTeachPage({
             score();
             if (raw <= session.deadlineMs) return raw;
         }
-        completeRound();
+        if (session.practice) completeFollowRound();
+        else finish(false);
         return null;
     }
 
@@ -382,9 +384,9 @@ export function initTeachPage({
                 sameOnset(armed.timeMs, note.timeMs) &&
                 armed.armed.has(note.note) &&
                 pitches.has(note.note),
-            nextRound: moreRounds()
+            nextRound: moreFollowRounds()
                 ? {
-                      startMs: session.deadlineMs + session.plan.gapMs,
+                      startMs: session.deadlineMs + session.loop.gapMs,
                       notes: session.notes,
                   }
                 : null,
@@ -446,8 +448,8 @@ export function initTeachPage({
         phase = "idle";
     }
 
-    function moreRounds() {
-        return session?.mode === "lesson" && session.round < session.plan.count;
+    function moreFollowRounds() {
+        return !!session?.loop && session.loop.round < session.loop.count;
     }
 
     function setupRound(origin) {
@@ -477,11 +479,10 @@ export function initTeachPage({
         scheduleAudio();
     }
 
-    function recordRound(stopped) {
-        scoreView.recordRound(
-            session.round,
-            scorer().result,
-            !!session.practice,
+    function recordFollowRound(stopped) {
+        return scoreView.recordFollowRound(
+            session.loop.round,
+            session.practice.result,
             stopped,
         );
     }
@@ -490,11 +491,13 @@ export function initTeachPage({
         if (session?.mode === "lesson") {
             if (session.judge) session.judge.advance(Infinity);
             score();
+            const result = session.practice
+                ? recordFollowRound(stopped)
+                : session.judge.result;
             showResults({
-                result: scorer().result,
+                result,
                 follow: !!session.practice,
                 stopped,
-                round: session.round,
                 context: t("teach.results.context", {
                     file: fileName,
                     tracks: new Intl.ListFormat(getLocale()).format(
@@ -503,7 +506,11 @@ export function initTeachPage({
                     bpm: byId("teach-bpm").value,
                 }),
             });
-            recordRound(stopped);
+            if (!session.practice)
+                byId("teach-results").scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                });
             feedback(
                 t(
                     stopped
@@ -517,19 +524,19 @@ export function initTeachPage({
         controls(t(stopped ? "teach.status.stopped" : "teach.status.finished"));
     }
 
-    function completeRound() {
-        if (!moreRounds()) {
+    function completeFollowRound() {
+        if (!moreFollowRounds()) {
             finish(false);
             return;
         }
         cancelFrame();
-        recordRound(false);
+        recordFollowRound(false);
         // Late rounds start now rather than replaying a gap that has already passed.
         const now = performance.now(),
             boundary = session.origin + session.deadlineMs;
         const nextOrigin =
-            (now - boundary > 100 ? now : boundary) + session.plan.gapMs;
-        session.round++;
+            (now - boundary > 100 ? now : boundary) + session.loop.gapMs;
+        session.loop.round++;
         setupRound(nextOrigin);
         tick();
     }
@@ -677,7 +684,7 @@ export function initTeachPage({
             samples: [],
             judge: null,
             plan: chart.plan,
-            round: 1,
+            loop: follow ? { ...chart.plan.loop, round: 1 } : null,
             follow,
         };
         phase = calibration ? "calibrating" : "playing";
@@ -725,19 +732,12 @@ export function initTeachPage({
     // ---- key input ---------------------------------------------------------------------------
 
     // Between rounds, the next round may be opened early by playing its first note.
-    function opensNextRound(event, receivedAt) {
+    function opensNextFollowRound(event) {
         const first = session.notes[0];
-        if (session.practice)
-            return session.notes.some(
-                (note) =>
-                    sameOnset(note.timeMs, first.timeMs) &&
-                    note.note === event.note,
-            );
-        const nextOrigin =
-            session.origin + session.deadlineMs + session.plan.gapMs;
-        return (
-            receivedAt - nextOrigin - timingOffset >=
-            first.timeMs - session.judge.windows.miss
+        return session.notes.some(
+            (note) =>
+                sameOnset(note.timeMs, first.timeMs) &&
+                note.note === event.note,
         );
     }
 
@@ -812,11 +812,11 @@ export function initTeachPage({
         )
             return;
         if (
-            moreRounds() &&
-            scorer().complete &&
-            opensNextRound(event, receivedAt)
+            moreFollowRounds() &&
+            session.practice.complete &&
+            opensNextFollowRound(event)
         )
-            completeRound();
+            completeFollowRound();
         if (session.mode === "calibration") pressCalibration(event, receivedAt);
         else if (session.practice) pressFollow(event, receivedAt);
         else pressRhythm(event, receivedAt);

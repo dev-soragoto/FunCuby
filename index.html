@@ -147,7 +147,17 @@
                     class="bluetooth-access muted"
                     role="status"
                     hidden
-                ></p>
+                >
+                    <span id="bluetooth-access-message"></span>
+                    <a
+                        id="bluetooth-ios-alternative"
+                        href="https://apps.apple.com/app/id6761301368"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        hidden
+                        >beacio</a
+                    >
+                </p>
                 <div class="device-grid">
                     <article class="keyboard-card card">
                         <div class="card-heading">
@@ -805,11 +815,7 @@
                                 ></span>
                                 <b id="teach-combo">0</b></span
                             ><span id="teach-count" class="muted">0 / 0</span
-                            ><span
-                                id="teach-round"
-                                class="muted"
-                                data-i18n="teach.stats.firstRound"
-                            ></span>
+                            ><span id="teach-round" class="muted" hidden></span>
                         </div>
                     </article>
                     <aside class="sidebar teach-sidebar">
@@ -889,6 +895,11 @@
                 >
                     <h2 id="teach-result-title"></h2>
                     <div class="teach-result-main">
+                        <span
+                            id="teach-final-rank"
+                            class="teach-final-rank"
+                            hidden
+                        ></span>
                         <strong id="teach-final-score">0</strong
                         ><span id="teach-final-accuracy" class="muted"></span>
                     </div>

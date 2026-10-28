@@ -18,6 +18,21 @@ export function osuHitWindows(od = DEFAULT_OD) {
 
 export const HIT_WINDOW = osuHitWindows().meh;
 
+/** osu!lazer ScoreProcessor accuracy cutoffs, with OsuScoreProcessor's Miss cap. */
+export function osuRank(counts) {
+    const total = counts[300] + counts[100] + counts[50] + counts.Miss;
+    if (!total) return null;
+    if (counts[300] === total) return "SS";
+    const accuracy =
+        (300 * counts[300] + 100 * counts[100] + 50 * counts[50]) /
+        (300 * total);
+    if (accuracy >= 0.95 && counts.Miss === 0) return "S";
+    if (accuracy >= 0.9) return "A";
+    if (accuracy >= 0.8) return "B";
+    if (accuracy >= 0.7) return "C";
+    return "D";
+}
+
 export class TeachingJudge {
     /**
      * @param {{ note: number, timeMs: number }[]} notes
@@ -139,6 +154,7 @@ export class TeachingJudge {
         );
         return {
             score: Math.max(0, Math.min(1000000, score)),
+            rank: this.complete ? osuRank(this.counts) : null,
             accuracy: accuracy * 100,
             maxCombo: this.maxCombo,
             combo: this.combo,

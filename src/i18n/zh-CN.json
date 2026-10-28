@@ -193,6 +193,7 @@
   "device": {
     "waiting": "等待连接键盘",
     "unnamed": "未命名设备",
+    "iosBluetoothAlternative": "当前浏览器未提供网页蓝牙功能，可以尝试使用",
     "bluetoothPermissionHint": "请在浏览器弹窗中允许蓝牙访问并选择设备。如果没有出现设备列表，请在手机系统「设置 → 应用 → 当前浏览器 → 权限」中允许「附近的设备」；较旧 Android 可能需要定位权限。电脑用户请检查系统的浏览器蓝牙权限。",
     "connection": {
       "disconnected": "未连接",
@@ -385,7 +386,7 @@
     },
     "mode": {
       "label": "练习模式",
-      "rhythm": "音游 · 漏音后继续",
+      "rhythm": "音游 · Miss 后继续",
       "follow": "跟练 · 等待按对"
     },
     "lead": "缩圈提前量（秒）",
@@ -442,8 +443,8 @@
       "followFirstKey": "跟随首键缩圈",
       "waiting": "等待 {notes}",
       "resumeIn": "继续倒计时 {seconds}",
-      "miss": "漏音",
-      "wrong": "误触",
+      "miss": "Miss",
+      "wrong": "Wrong key",
       "done": "完成",
       "sampled": "已采集",
       "early": "提前完成",
@@ -463,7 +464,6 @@
       "completed": "已完成",
       "waits": "等待次数",
       "wrong": "误触次数",
-      "firstRound": "第 1 轮",
       "round": "第 {round} / {total} 轮"
     },
     "mapping": {
@@ -486,25 +486,21 @@
       "round": "第 {round} 轮",
       "stoppedRound": "第 {round} 轮（提前结束）",
       "follow": "完成 {done}/{total} · 等待 {waits} 次 · 误触 {wrong} 次",
-      "rhythm": "{score} 分 · {accuracy}% · 最大连击 {combo}",
       "summaryFollow": "{count} 轮记录 · 最佳完成率 {best}% · 平均 {average}%",
-      "summaryRhythm": "{count} 轮记录 · 最佳准确率 {best}% · 平均 {average}%",
       "recent": "显示最近 {count} 轮"
     },
     "results": {
-      "formula": "osu!lazer 纯点击计分，无模组、无额外奖励，满分 1,000,000。准确率按 300 / 100 / 50 / 0",
-      "stoppedTitle": "本次练习已结束 · 第 {round} 轮",
-      "finishedTitle": "练习完成 · 第 {round} 轮",
+      "formula": "评分参考 osu!",
+      "rank": "评级 {rank}",
+      "stoppedTitle": "本次练习已结束",
+      "finishedTitle": "练习完成",
       "context": "{file} · {tracks} · {bpm} BPM。",
       "rhythmSummary": "准确率 {accuracy} · 最大连击 {combo} · OD {od}",
-      "followSummary": "完成音符 · 等待 {waits} 次 · 误触 {wrong} 次",
-      "followUntimed": "跟练模式不按时间打分，也不记漏音。",
-      "followStopped": "本轮提前结束。",
-      "followDone": "当前范围已完成。",
+      "followSummary": "累计完成音符 · 等待 {waits} 次 · 误触 {wrong} 次",
       "noHits": "本次没有命中的音符。",
       "early": "命中音符平均偏早 {error} ms（已应用校准）。",
       "late": "命中音符平均偏晚 {error} ms（已应用校准）。",
-      "stoppedMisses": "提前结束，未完成的音符计为漏音。"
+      "stoppedMisses": "提前结束，未完成的音符计为 Miss。"
     }
   },
   "logs": {

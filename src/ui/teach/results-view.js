@@ -4,12 +4,11 @@ import { byId, el } from "../dom.js";
 const GRADE_ROWS = ["300", "100", "50", "Miss"];
 const percent = (value) =>
     `${formatNumber(value, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%`;
-const rounds = (count) => (count === Infinity ? "∞" : count);
 const sentences = (...parts) =>
     parts.filter(Boolean).join(t("common.sentenceGap"));
 
 /** Live counters under the practice keyboard. Follow mode reuses the slots for its own counts. */
-export function showScore({ result, follow, round, rounds: total }) {
+export function showScore({ result, follow }) {
     byId("teach-score-label").textContent = t(
         follow ? "teach.stats.completed" : "teach.stats.score",
     );
@@ -28,9 +27,12 @@ export function showScore({ result, follow, round, rounds: total }) {
     byId("teach-combo").textContent = follow ? result.wrong : result.combo;
     byId("teach-count").textContent =
         `${follow ? result.completed : result.judged} / ${result.total}`;
+}
+
+export function showFollowRound({ round, count }) {
     byId("teach-round").textContent = t("teach.stats.round", {
         round,
-        total: rounds(total),
+        total: count === Infinity ? "∞" : count,
     });
 }
 
@@ -62,16 +64,22 @@ function countCell(label, count) {
     return node;
 }
 
-/** Final card for a round. context is the translated "file · tracks · BPM." sentence. */
-export function showResults({ result, follow, stopped, round, context }) {
+/** Final summary; follow results include all recorded rounds in the session. */
+export function showResults({ result, follow, stopped, context }) {
     byId("teach-results").hidden = false;
     byId("teach-result-title").textContent = t(
         stopped ? "teach.results.stoppedTitle" : "teach.results.finishedTitle",
-        {
-            round,
-        },
     );
     byId("teach-score-formula").hidden = follow;
+    byId("teach-result-timing").hidden = follow;
+    const rank = follow ? null : result.rank;
+    const rankNode = byId("teach-final-rank");
+    rankNode.hidden = !rank;
+    rankNode.textContent = rank || "";
+    rankNode.setAttribute(
+        "aria-label",
+        rank ? t("teach.results.rank", { rank }) : "",
+    );
     if (follow) {
         byId("teach-final-score").textContent =
             `${result.completed} / ${result.total}`;
@@ -83,15 +91,7 @@ export function showResults({ result, follow, stopped, round, context }) {
             },
         );
         byId("teach-result-counts").replaceChildren();
-        byId("teach-result-timing").textContent = sentences(
-            context,
-            t("teach.results.followUntimed"),
-            t(
-                stopped
-                    ? "teach.results.followStopped"
-                    : "teach.results.followDone",
-            ),
-        );
+        byId("teach-result-timing").textContent = "";
         return;
     }
     byId("teach-final-score").textContent = formatNumber(result.score);

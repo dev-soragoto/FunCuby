@@ -1,6 +1,10 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { osuHitWindows, TeachingJudge } from "../../src/core/teaching/judge.js";
+import {
+    osuHitWindows,
+    osuRank,
+    TeachingJudge,
+} from "../../src/core/teaching/judge.js";
 import { FollowPractice } from "../../src/core/teaching/follow-practice.js";
 import {
     calibrationOffset,
@@ -24,6 +28,44 @@ test("osuHitWindows follows lazer formulas", () => {
         miss: 400,
     });
     assert.throws(() => osuHitWindows(11));
+});
+
+test("osuRank follows lazer accuracy cutoffs, including exact boundaries and the Miss cap", () => {
+    const rank = (great, ok = 0, meh = 0, miss = 0) =>
+        osuRank({ 300: great, 100: ok, 50: meh, Miss: miss });
+    assert.equal(rank(0), null);
+    assert.equal(rank(1), "SS");
+    assert.equal(rank(37, 3), "S"); // Exactly 95%.
+    assert.equal(rank(19, 0, 1), "S"); // lazer has no separate 50-count limit.
+    assert.equal(rank(95, 0, 0, 5), "A"); // 95% with Misses.
+    assert.equal(rank(3699, 301), "A"); // Just below 95%.
+    assert.equal(rank(17, 3), "A"); // Exactly 90%.
+    assert.equal(rank(169, 31), "B"); // Just below 90%.
+    assert.equal(rank(7, 3), "B"); // Exactly 80%.
+    assert.equal(rank(69, 31), "C"); // Just below 80%.
+    assert.equal(rank(11, 9), "C"); // Exactly 70%.
+    assert.equal(rank(109, 91), "D"); // Just below 70%.
+    assert.equal(rank(0, 0, 0, 1), "D");
+    assert.equal(rank(100000, 1), "S"); // Display rounds to 100.00%, but not SS.
+});
+
+test("TeachingJudge only assigns a rank to a completed, nonempty round", () => {
+    const judge = new TeachingJudge(notes());
+    assert.equal(judge.result.rank, null);
+    judge.press(60, 1000);
+    assert.equal(judge.result.rank, null);
+    judge.press(62, 2000);
+    assert.equal(judge.result.rank, "SS");
+    assert.equal(new TeachingJudge([]).result.rank, null);
+});
+
+test("ending a round early includes unfinished notes as Misses in its rank", () => {
+    const judge = new TeachingJudge(notes());
+    judge.press(60, 1000);
+    judge.advance(Infinity);
+    assert.equal(judge.result.rank, "D");
+    assert.equal(judge.result.accuracy, 50);
+    assert.equal(judge.result.counts.Miss, 1);
 });
 
 test("TeachingJudge grades presses by distance", () => {
