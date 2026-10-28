@@ -9,7 +9,14 @@
     "send": "测试",
     "play": "演奏",
     "teach": "练习",
-    "logs": "日志"
+    "logs": "日志",
+    "about": "关于"
+  },
+  "about": {
+    "title": "关于 FunCuby",
+    "description": "该项目是 CubyFun easyplay 1s 的非官方开源网页工具，支持蓝牙连接、MIDI 演奏和练习。",
+    "projectLink": "GitHub 项目 ↗",
+    "star": "如果帮到了你，请帮我点个 Star ⭐！"
   },
   "common": {
     "apply": "应用",

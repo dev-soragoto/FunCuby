@@ -82,6 +82,11 @@
                     type="button"
                     data-tab="logs"
                     data-i18n="nav.logs"
+                ></button
+                ><button
+                    type="button"
+                    data-tab="about"
+                    data-i18n="nav.about"
                 ></button>
             </nav>
             <div
@@ -962,6 +967,22 @@
                         ><span class="muted" data-i18n="logs.limitHint"></span>
                     </div>
                 </div>
+            </section>
+            <section id="panel-about" class="panel" hidden>
+                <article class="card">
+                    <h2 data-i18n="about.title"></h2>
+                    <p class="muted" data-i18n="about.description"></p>
+                    <p>
+                        <a
+                            class="button"
+                            href="https://github.com/dev-soragoto/FunCuby"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            data-i18n="about.projectLink"
+                        ></a>
+                    </p>
+                    <p data-i18n="about.star"></p>
+                </article>
             </section>
         </main>
         <dialog id="detail-dialog">

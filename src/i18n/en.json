@@ -9,7 +9,14 @@
     "send": "Test",
     "play": "Play",
     "teach": "Practice",
-    "logs": "Logs"
+    "logs": "Logs",
+    "about": "About"
+  },
+  "about": {
+    "title": "About FunCuby",
+    "description": "This project is an unofficial open-source web tool for CubyFun easyplay 1s, with Bluetooth connectivity, MIDI playback and practice.",
+    "projectLink": "View on GitHub ↗",
+    "star": "If this project helped you, please give me a Star ⭐!"
   },
   "common": {
     "apply": "Apply",

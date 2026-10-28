@@ -28,6 +28,10 @@
     min-width: 0;
 }
 
+#panel-play .table-scroll {
+    margin-top: 20px;
+}
+
 #midi-summary {
     overflow-wrap: anywhere;
 }

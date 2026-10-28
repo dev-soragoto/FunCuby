@@ -15,7 +15,7 @@ import { initLocalePicker } from "./ui/locale-picker.js";
 import { initTeachPage } from "./ui/teach/teach-page.js";
 import { initThemePicker } from "./ui/theme-picker.js";
 
-const TABS = ["device", "send", "play", "teach", "logs"];
+const TABS = ["device", "send", "play", "teach", "logs", "about"];
 
 async function initialize() {
     initLocalePicker(preferences);
