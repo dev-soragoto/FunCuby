@@ -93,7 +93,7 @@
       "ep2": "The selected device is an EP2; this workbench only supports EP1",
       "noNotify": "The MIDI characteristic does not support notifications",
       "busy": "Disconnect the current device first",
-      "unavailable": "This browser does not provide Web Bluetooth and cannot connect directly. Use a browser with Web Bluetooth, such as Chrome or Samsung Internet on Android, or Chrome / Edge on a computer.",
+      "unavailable": "This browser does not provide Web Bluetooth and cannot connect directly. Use a browser with Web Bluetooth, such as Chrome / Edge.",
       "insecure": "Bluetooth requires a secure page. Open the site over HTTPS or localhost on this device.",
       "blocked": "The site's security policy blocks Bluetooth access on this page. Open the project website directly or contact the site maintainer.",
       "permissionDenied": "The browser blocked Bluetooth authorization. Check this site's Bluetooth permission. On Android, also allow Nearby devices in system Settings → Apps → your browser → Permissions. Older Android versions may require Location permission. Return to the page and click Connect again.",
