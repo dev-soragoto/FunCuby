@@ -49,18 +49,17 @@
     "rounds": "循环轮数"
   },
   "app": {
-    "noBluetooth": "当前环境无法直连蓝牙。请使用 Windows Chrome/Edge 或 Android Chrome，通过 localhost / HTTPS 打开。",
     "initFailed": "工作台初始化失败：{reason}"
   },
   "errors": {
-    "integer": "{field}须为 {min}～{max} 的整数",
+    "integer": "{field}须为 {min}~{max} 的整数",
     "positive": "{field}须为大于 0 的数值",
     "invalidNumber": "请填写有效的{field}",
     "bpmTooLow": "BPM 过小，时长超出范围",
     "trackFormat": "请选择音轨封装格式",
     "trackMode": "请选择音轨发送方式",
-    "minGap": "忽略抬起阈值须为 0～5000 ms",
-    "minDuration": "最短音长须为 0～5000 ms",
+    "minGap": "忽略抬起阈值须为 0~5000 ms",
+    "minDuration": "最短音长须为 0~5000 ms",
     "programConflict": "通道 {channel} 的音色设置冲突，请统一音色或选择不同通道",
     "position": "演奏位置无效",
     "stopPlayback": "请先停止当前演奏",
@@ -72,7 +71,7 @@
     "tooFewTaps": "有效按键不足 {min} 次，请重新校准",
     "noWebAudio": "当前浏览器不支持 Web Audio，请关闭节拍器后练习",
     "metronomeBlocked": "节拍器未能启动，请再次点击开始",
-    "od": "OD 须为 0～10 的数值",
+    "od": "OD 须为 0~10 的数值",
     "uploadFirst": "请先上传 MIDI",
     "uploadAndChoose": "请先上传 MIDI 并勾选练习轨",
     "noPracticeNotes": "请选择包含音符的练习轨",
@@ -81,7 +80,7 @@
     "invalidBars": "请输入有效的小节范围，结束小节不能早于起始小节",
     "invalidGap": "请选择有效的轮间准备时间",
     "hex": "请输入完整的十六进制字节，例如 80 80 9F 3C 55",
-    "sleep": "等待指令格式为 sleep 毫秒数，范围 0～{max}，可用小数",
+    "sleep": "等待指令格式为 sleep 毫秒数，范围 0~{max}，可用小数",
     "packetTooLong": "每包最多 {max} 字节，不自动分片",
     "rawLine": "第 {line} 行：{reason}",
     "rawEmpty": "请至少输入一行 HEX，每行一个包，可穿插 sleep 毫秒数",
@@ -94,7 +93,12 @@
       "ep2": "所选设备识别为 EP2；本工作台仅处理 EP1",
       "noNotify": "MIDI 特征不支持通知",
       "busy": "请先断开当前连接",
-      "unavailable": "当前浏览器没有 Web Bluetooth，请使用 Windows Chrome/Edge 或 Android Chrome，并通过 localhost / HTTPS 打开",
+      "unavailable": "当前浏览器未提供网页蓝牙功能，无法直接连接设备。请改用支持网页蓝牙的浏览器，例如 Android Chrome / 三星浏览器，或电脑 Chrome / Edge。",
+      "insecure": "蓝牙连接需要安全页面，请通过 HTTPS 或本机 localhost 打开。",
+      "blocked": "当前页面的蓝牙访问被网站安全策略阻止，请直接打开项目网站，或联系网站维护者。",
+      "permissionDenied": "浏览器阻止了蓝牙授权。请检查网站的蓝牙权限；手机用户还需在系统「设置 → 应用 → 当前浏览器 → 权限」中允许「附近的设备」。较旧 Android 可能需要定位权限。设置后返回网页，再点击连接。",
+      "noDeviceSelected": "未选择设备或未找到匹配设备。请确认蓝牙和键盘已开启，再点击连接并选择设备。如果没有弹出设备列表，请检查浏览器的「附近的设备」或系统蓝牙权限。",
+      "adapterUnavailable": "无法使用蓝牙适配器。请开启蓝牙，并检查浏览器的系统蓝牙或「附近的设备」权限后重试。",
       "notWritable": "该特征不支持写入",
       "writeFailed": "{label} 写入失败：{reason} ({hex})"
     },
@@ -149,7 +153,7 @@
   },
   "rx": {
     "empty": "空通知",
-    "badHeader": "BLE MIDI 包头须为 80～BF",
+    "badHeader": "BLE MIDI 包头须为 80~BF",
     "noStatus": "通知没有 MIDI 状态字节或有效 BLE MIDI 包头",
     "noTimestampLow": "缺少 BLE MIDI 时间低字节；可切换接收格式检查原文",
     "previousIncomplete": "上一通知的 MIDI 消息不完整",
@@ -189,8 +193,10 @@
   "device": {
     "waiting": "等待连接键盘",
     "unnamed": "未命名设备",
+    "bluetoothPermissionHint": "请在浏览器弹窗中允许蓝牙访问并选择设备。如果没有出现设备列表，请在手机系统「设置 → 应用 → 当前浏览器 → 权限」中允许「附近的设备」；较旧 Android 可能需要定位权限。电脑用户请检查系统的浏览器蓝牙权限。",
     "connection": {
       "disconnected": "未连接",
+      "choosing": "等待授权或选择设备",
       "busy": "连接中",
       "ready": "设备已连接"
     },
@@ -255,18 +261,18 @@
       "off": "松开音符",
       "program": "音色选择"
     },
-    "program": "音色编号（十进制 0～127）",
+    "program": "音色编号（十进制 0~127）",
     "pitches": "音高列表（十进制，空格或逗号分隔）",
-    "channel": "通道（1～16）",
-    "velocity": "力度（0～127）",
+    "channel": "通道（1~16）",
+    "velocity": "力度（0~127）",
     "format": "封装格式",
-    "timestamp": "时间戳（0～8191 ms）",
+    "timestamp": "时间戳（0~8191 ms）",
     "rawHex": "原始 HEX",
     "submit": "发送消息 ↗",
     "raw": {
       "label": "每行一个 HEX 包或 sleep 毫秒数",
       "hintBefore": "每行一个包，不合并、不添加头部，每包最多 512 字节。单独一行",
-      "hintAfter": "表示上一包写入完成后等待 101 ms 再执行下一行；支持小数，范围 0～60000 ms。空行忽略，发送前校验全部行。「取消待发任务」可中止等待及后续发送。",
+      "hintAfter": "表示上一包写入完成后等待 101 ms 再执行下一行；支持小数，范围 0~60000 ms。空行忽略，发送前校验全部行。「取消待发任务」可中止等待及后续发送。",
       "submit": "逐行发送"
     },
     "pending": { "label": "待发送任务", "empty": "暂无待发送任务" },
@@ -463,7 +469,7 @@
     "mapping": {
       "title": "首键音高",
       "hint": "按实体首键确定键位，标签显示设备实际音高；与「设备」页共用首键偏移。",
-      "firstNote": "首键 MIDI 音高（0～127）",
+      "firstNote": "首键 MIDI 音高（0~127）",
       "apply": "应用首键音高",
       "current": "首键 {note}（{pitch}）",
       "cancel": "取消首键校准"

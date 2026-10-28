@@ -1,4 +1,5 @@
 import { AppError, describe, message } from "../message.js";
+import { bluetoothAccessError, bluetoothRequestError } from "./access.js";
 import { CHARACTERISTIC, classify, hex, SERVICE } from "./protocol.js";
 
 const deviceModel = (device) => {
@@ -50,28 +51,31 @@ export class BleTransport extends EventTarget {
     async connect({ byName = false, reconnect = false } = {}) {
         if (["choosing", "connecting", "ready"].includes(this.state))
             throw new AppError("errors.ble.busy");
-        if (!this.bluetooth) throw new AppError("errors.ble.unavailable");
+        const accessError = bluetoothAccessError({ bluetooth: this.bluetooth });
+        if (accessError) throw accessError;
         const generation = ++this.generation;
         this.status(
             "choosing",
             message(reconnect ? "ble.reconnecting" : "ble.choosing"),
         );
         try {
-            const device =
-                reconnect && this.device
-                    ? this.device
-                    : await this.bluetooth.requestDevice(
-                          byName
-                              ? {
-                                    filters: [
-                                        "EP-",
-                                        "EP_MUSIC",
-                                        "EASYPLAY",
-                                    ].map((namePrefix) => ({ namePrefix })),
-                                    optionalServices: [SERVICE],
-                                }
-                              : { filters: [{ services: [SERVICE] }] },
-                      );
+            let device = reconnect && this.device ? this.device : null;
+            if (!device) {
+                try {
+                    device = await this.bluetooth.requestDevice(
+                        byName
+                            ? {
+                                  filters: ["EP-", "EP_MUSIC", "EASYPLAY"].map(
+                                      (namePrefix) => ({ namePrefix }),
+                                  ),
+                                  optionalServices: [SERVICE],
+                              }
+                            : { filters: [{ services: [SERVICE] }] },
+                    );
+                } catch (error) {
+                    throw bluetoothRequestError(error);
+                }
+            }
             if (generation !== this.generation) return;
             const model = deviceModel(device);
             this.device?.removeEventListener(

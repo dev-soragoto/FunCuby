@@ -113,8 +113,6 @@ async function initialize() {
         label: message("log.ready"),
         message: message("log.readyDetail"),
     });
-    if (!window.isSecureContext || !navigator.bluetooth)
-        notice(message("app.noBluetooth"));
     navigate(location.hash.slice(1));
 }
 

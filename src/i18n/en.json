@@ -49,7 +49,6 @@
     "rounds": "Loop rounds"
   },
   "app": {
-    "noBluetooth": "Bluetooth is not available here. Use Chrome or Edge on Windows, or Chrome on Android, and open the page over localhost or HTTPS.",
     "initFailed": "The workbench failed to start: {reason}"
   },
   "errors": {
@@ -94,7 +93,12 @@
       "ep2": "The selected device is an EP2; this workbench only supports EP1",
       "noNotify": "The MIDI characteristic does not support notifications",
       "busy": "Disconnect the current device first",
-      "unavailable": "This browser has no Web Bluetooth. Use Chrome or Edge on Windows, or Chrome on Android, over localhost or HTTPS",
+      "unavailable": "This browser does not provide Web Bluetooth and cannot connect directly. Use a browser with Web Bluetooth, such as Chrome or Samsung Internet on Android, or Chrome / Edge on a computer.",
+      "insecure": "Bluetooth requires a secure page. Open the site over HTTPS or localhost on this device.",
+      "blocked": "The site's security policy blocks Bluetooth access on this page. Open the project website directly or contact the site maintainer.",
+      "permissionDenied": "The browser blocked Bluetooth authorization. Check this site's Bluetooth permission. On Android, also allow Nearby devices in system Settings → Apps → your browser → Permissions. Older Android versions may require Location permission. Return to the page and click Connect again.",
+      "noDeviceSelected": "No device was selected or no matching device was found. Turn on Bluetooth and the keyboard, then click Connect and select a device. If no device picker appears, check the browser's Nearby devices or system Bluetooth permission.",
+      "adapterUnavailable": "The Bluetooth adapter could not be accessed. Turn on Bluetooth and check the browser's system Bluetooth or Nearby devices permission, then retry.",
       "notWritable": "The characteristic does not support writes",
       "writeFailed": "{label} failed to write: {reason} ({hex})"
     },
@@ -189,8 +193,10 @@
   "device": {
     "waiting": "Waiting for a keyboard",
     "unnamed": "Unnamed device",
+    "bluetoothPermissionHint": "Allow Bluetooth access in the browser prompt and select a device. If no device picker appears, allow Nearby devices in Android Settings → Apps → your browser → Permissions. Older Android versions may require Location permission. On a computer, check the browser's Bluetooth permission in system settings.",
     "connection": {
       "disconnected": "Disconnected",
+      "choosing": "Waiting for permission or device selection",
       "busy": "Connecting",
       "ready": "Connected"
     },

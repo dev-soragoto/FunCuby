@@ -12,6 +12,10 @@
     margin-bottom: 5px;
 }
 
+.bluetooth-access {
+    margin: 0 0 20px;
+}
+
 .actions {
     display: flex;
     gap: 8px;

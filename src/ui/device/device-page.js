@@ -1,11 +1,12 @@
 import { CHARACTERISTIC, hex, SERVICE } from "../../core/ble/protocol.js";
+import { bluetoothAccessError } from "../../core/ble/access.js";
 import { MidiDecoder } from "../../core/ble/midi-decoder.js";
 import { KeyState } from "../../core/keyboard/key-state.js";
 import { ALL_NOTES } from "../../core/keyboard/layout.js";
 import { message } from "../../core/message.js";
 import { noteName } from "../../core/music.js";
 import { integer } from "../../core/validate.js";
-import { t } from "../../i18n/i18n.js";
+import { t, translate } from "../../i18n/i18n.js";
 import { byId } from "../dom.js";
 import { createKeyboard } from "../keyboard-view.js";
 
@@ -29,6 +30,15 @@ export function initDevicePage({
     const decoder = new MidiDecoder(),
         keys = new KeyState(),
         keyNodes = createKeyboard(byId("keyboard"));
+    const accessError = bluetoothAccessError({
+        bluetooth: transport.bluetooth,
+    });
+    const showAccessHint = (value, error = false) => {
+        const hint = byId("bluetooth-access");
+        hint.textContent = translate(value);
+        hint.hidden = !value;
+        hint.classList.toggle("warning", error);
+    };
     let lastOffset = 0,
         rxSequence = 0;
     const offsetKey = () => transport.device && `offset:${transport.device.id}`;
@@ -145,12 +155,15 @@ export function initDevicePage({
         byId("connection-text").textContent = t(
             ready
                 ? "device.connection.ready"
-                : busy
-                  ? "device.connection.busy"
-                  : "device.connection.disconnected",
+                : detail.state === "choosing"
+                  ? "device.connection.choosing"
+                  : busy
+                    ? "device.connection.busy"
+                    : "device.connection.disconnected",
         );
-        byId("connect").disabled = ready || busy;
-        byId("reconnect").disabled = ready || busy || !transport.device;
+        byId("connect").disabled = !!accessError || ready || busy;
+        byId("reconnect").disabled =
+            !!accessError || ready || busy || !transport.device;
         byId("disconnect").disabled = !ready && !busy;
         if ("name" in detail)
             byId("device-name").textContent =
@@ -169,6 +182,14 @@ export function initDevicePage({
 
     function updateStatus(detail) {
         showConnection(detail);
+        showAccessHint(
+            detail.state === "error"
+                ? detail.message
+                : detail.state === "choosing"
+                  ? message("device.bluetoothPermissionHint")
+                  : accessError,
+            detail.state === "error" || !!accessError,
+        );
         if (detail.state === "ready") {
             const saved = Number(preferences.get(offsetKey()) ?? 0);
             setOffset(isOffset(saved) ? saved : 0);
@@ -198,12 +219,16 @@ export function initDevicePage({
     byId("connect").addEventListener("click", () => {
         transport
             .connect({ byName: byId("scan-filter").value === "name" })
-            .catch((e) => notice(e.message, true));
+            .catch((error) => {
+                showAccessHint(error, true);
+                notice(error, true);
+            });
     });
     byId("reconnect").addEventListener("click", () => {
-        transport
-            .connect({ reconnect: true })
-            .catch((e) => notice(e.message, true));
+        transport.connect({ reconnect: true }).catch((error) => {
+            showAccessHint(error, true);
+            notice(error, true);
+        });
     });
     byId("disconnect").addEventListener("click", () => transport.disconnect());
     byId("calibrate").addEventListener("click", () => {
@@ -247,6 +272,8 @@ export function initDevicePage({
     byId("service-id").textContent = SERVICE;
     byId("characteristic-id").textContent = CHARACTERISTIC;
     byId("last-hex").textContent = t("device.captureOff");
+    showConnection({ state: transport.state });
+    showAccessHint(accessError, !!accessError);
     render();
     return { getOffset: () => keys.offset, setOffset };
 }
