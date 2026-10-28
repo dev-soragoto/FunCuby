@@ -1,0 +1,647 @@
+.teach-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 280px;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.teach-picker-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));
+    gap: 16px;
+    margin-top: 18px;
+}
+
+.teach-track-picker,
+.teach-difficulty-picker {
+    min-width: 0;
+    margin: 0;
+    padding: 8px 10px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+}
+
+.teach-track-picker legend,
+.teach-difficulty-picker legend {
+    padding: 0 4px;
+    font-size: 12px;
+    color: var(--text-soft);
+}
+
+#teach-track-count,
+#teach-difficulty-status {
+    margin-left: 8px;
+    font-size: 11px;
+}
+
+.teach-track-picker:disabled,
+.teach-difficulty-picker:disabled {
+    opacity: 0.65;
+}
+
+.teach-tracks {
+    max-height: 200px;
+    overflow: auto;
+}
+
+.teach-tracks p {
+    margin: 4px;
+    font-size: 12px;
+}
+
+.teach-tracks .teach-track-option,
+.teach-difficulties .teach-difficulty-option {
+    display: grid;
+    grid-template-columns: 16px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    padding: 6px 4px;
+}
+
+.teach-track-option input,
+.teach-difficulty-option input {
+    width: 16px;
+    min-height: 16px;
+    padding: 0;
+    accent-color: var(--primary);
+}
+
+.teach-track-option span {
+    overflow-wrap: anywhere;
+}
+
+.teach-track-option span:last-child {
+    font-size: 11px;
+    white-space: nowrap;
+}
+
+/* Rows share one grid so every name column is as wide as the longest preset name.
+   The first track stays intrinsic so it absorbs each row's padding instead of squeezing the radio. */
+.teach-difficulties {
+    display: grid;
+    grid-template-columns: auto max-content minmax(0, 1fr);
+}
+
+.teach-difficulties .teach-difficulty-option {
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    align-items: baseline;
+    padding: 9px 6px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.teach-difficulty-option input {
+    align-self: center;
+}
+
+.teach-difficulty-option span:last-child {
+    font: 11px var(--mono);
+    line-height: 1.6;
+}
+
+.teach-difficulty-option:has(input:checked) {
+    background: var(--primary-soft);
+    box-shadow: inset 0 0 0 1px var(--primary);
+}
+
+.teach-difficulty-picker:disabled .teach-difficulty-option {
+    cursor: default;
+}
+
+/* Same caption + 40px field shape as the neighbouring labels, holding the switch and its volume. */
+.teach-metronome {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-soft);
+}
+
+.teach-metronome-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 200px;
+    min-height: 40px;
+    padding: 0 12px;
+    background: var(--field);
+    border: 1px solid var(--control-border);
+    border-radius: 6px;
+}
+
+.teach-metronome-box input {
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    accent-color: var(--primary);
+}
+
+#teach-metronome {
+    flex: none;
+    width: 16px;
+    height: 16px;
+}
+
+#teach-volume {
+    flex: 1;
+    width: auto;
+}
+
+#teach-metronome:not(:checked) + #teach-volume {
+    opacity: 0.45;
+}
+
+.teach-feedback {
+    min-height: 40px;
+    display: flex;
+    flex-direction: column;
+    margin-top: 14px;
+    text-align: center;
+}
+
+.teach-feedback strong {
+    font: 600 26px var(--mono);
+    color: var(--accent);
+}
+
+.teach-stage .keyboard-surround {
+    padding-top: 70px;
+    padding-bottom: 60px;
+}
+
+.teach-key {
+    --cue-color: var(--accent);
+    --hit-color: var(--success);
+}
+
+.teach-key .note {
+    font: 600 3.3cqi var(--mono);
+    color: var(--text-soft);
+    text-shadow: none;
+    z-index: 4;
+    pointer-events: none;
+}
+
+.teach-key.sharp-key {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.teach-key.target {
+    border-color: var(--cue-color);
+    background: color-mix(in srgb, var(--cue-color) 12%, var(--key-face));
+}
+
+.teach-key.sharp-key.target {
+    background: var(--cue-color);
+}
+
+.teach-key.active {
+    border-color: var(--primary);
+    background: var(--primary-soft);
+    box-shadow: 0 0 12px color-mix(in srgb, var(--primary) 30%, transparent);
+}
+
+.teach-key.sharp-key.active {
+    background: var(--primary);
+}
+
+.teach-key.hit {
+    background: color-mix(in srgb, var(--hit-color) 18%, var(--key-face));
+    border-color: var(--hit-color);
+    box-shadow: 0 0 15px color-mix(in srgb, var(--hit-color) 35%, transparent);
+}
+
+.teach-key.missed {
+    background: var(--danger-soft);
+}
+
+.approach-ring {
+    position: absolute;
+    inset: -3px;
+    border: 2px solid var(--cue-color);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 5;
+    transform-origin: center;
+}
+
+.approach-ring.current-cue {
+    border-width: 3px;
+    z-index: 6;
+}
+
+.key-burst {
+    --effect-color: var(--press);
+    position: absolute;
+    inset: -4px;
+    border: 2px solid var(--effect-color);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9;
+    transform-origin: center;
+    animation: key-press-pulse 180ms ease-out both;
+}
+
+.key-burst.burst-hit {
+    border-width: 3px;
+    box-shadow: 0 0 10px var(--effect-color);
+    animation: key-hit-pulse 360ms ease-out both;
+}
+
+.key-burst.burst-miss {
+    animation: key-miss-pulse 300ms ease-out both;
+}
+
+.key-hit-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--effect-color);
+    font: 700 15px var(--mono);
+    text-shadow:
+        0 0 5px var(--surface),
+        0 0 3px var(--surface);
+}
+
+.sharp-key .key-hit-label {
+    font-size: 10px;
+}
+
+@keyframes key-press-pulse {
+    from {
+        transform: scale(0.85);
+        opacity: 0.7;
+    }
+
+    to {
+        transform: scale(1.35);
+        opacity: 0;
+    }
+}
+
+@keyframes key-hit-pulse {
+    0% {
+        transform: scale(0.95);
+        opacity: 1;
+    }
+
+    45% {
+        opacity: 0.85;
+    }
+
+    100% {
+        transform: scale(1.65);
+        opacity: 0;
+    }
+}
+
+@keyframes key-miss-pulse {
+    from {
+        transform: scale(0.95);
+        opacity: 0.9;
+    }
+
+    to {
+        transform: scale(1.2);
+        opacity: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .key-burst,
+    .key-burst.burst-hit,
+    .key-burst.burst-miss {
+        animation-duration: 1ms;
+    }
+}
+
+.teach-upcoming {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    min-height: 36px;
+    padding-bottom: 14px;
+}
+
+.teach-upcoming span {
+    --cue-color: var(--muted);
+    font: 11px var(--mono);
+    border: 1px solid var(--cue-color);
+    border-radius: 5px;
+    padding: 5px 7px;
+    color: var(--cue-color);
+    opacity: 0.65;
+}
+
+.teach-upcoming span:first-child {
+    opacity: 1;
+    font-weight: 600;
+}
+
+.teach-results {
+    margin-top: 20px;
+}
+
+.teach-score-card {
+    margin-top: 20px;
+    min-width: 0;
+}
+
+.teach-stage {
+    align-self: start;
+    scroll-margin-top: 16px;
+}
+
+.teach-score-card .card-heading > .muted {
+    font-size: 11px;
+}
+
+.teach-loop-settings input {
+    width: 120px;
+}
+
+.teach-score-tools {
+    margin-top: 16px;
+}
+
+.teach-score-tools button[aria-pressed="true"] {
+    color: var(--primary-text);
+    border-color: var(--primary);
+    background: var(--primary-soft);
+}
+
+#teach-loop-range {
+    font-size: 12px;
+}
+
+.teach-score {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr));
+    grid-auto-rows: max-content;
+    align-items: start;
+    align-content: start;
+    gap: 6px;
+    margin-top: 14px;
+    max-height: 300px;
+    overflow: auto;
+    scrollbar-gutter: stable;
+    padding: 3px;
+}
+
+.teach-score.multi-track {
+    max-height: min(65vh, 620px);
+}
+
+.score-bar {
+    min-width: 0;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    overflow: auto;
+}
+
+.score-bar-heading {
+    font: 10px var(--mono);
+    color: var(--muted);
+    padding: 4px 7px;
+    border-bottom: 1px solid var(--line);
+}
+
+.score-track + .score-track {
+    border-top: 1px solid var(--line);
+}
+
+.score-track-heading {
+    padding: 5px 7px;
+    font-size: 10px;
+    color: var(--text-soft);
+    background: var(--surface-sunken);
+    overflow-wrap: anywhere;
+}
+
+.score-beats {
+    display: grid;
+    min-height: 50px;
+}
+
+.score-beat {
+    position: relative;
+    min-width: 32px;
+    padding: 16px 4px 4px;
+    border-right: 1px solid var(--line-soft);
+    cursor: pointer;
+    user-select: none;
+    touch-action: pan-y;
+}
+
+.score-beat:last-child {
+    border-right: 0;
+}
+
+.score-beat.selected {
+    background: var(--primary-soft);
+}
+
+.score-beat.current {
+    box-shadow: inset 0 -4px var(--primary);
+    background: color-mix(in srgb, var(--primary) 30%, var(--surface));
+}
+
+.score-beat:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: -2px;
+}
+
+.score-beat.range-a::before,
+.score-beat.range-b::after {
+    position: absolute;
+    top: 5px;
+    font: 10px var(--mono);
+    font-weight: bold;
+    color: var(--primary-text);
+}
+
+.score-beat.range-a::before {
+    content: "A";
+    left: 5px;
+}
+
+.score-beat.range-b::after {
+    content: "B";
+    right: 5px;
+}
+
+.score-beat-number {
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    font: 9px var(--mono);
+    color: var(--faint);
+}
+
+.score-events {
+    display: grid;
+    gap: 3px;
+    align-items: center;
+    justify-items: center;
+    min-height: 30px;
+}
+
+.score-key-change {
+    font: 9px var(--mono);
+    color: var(--accent);
+    white-space: nowrap;
+    align-self: flex-start;
+}
+
+.score-chord {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    align-items: center;
+}
+
+.score-note {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 15px;
+    cursor: pointer;
+}
+
+.score-digit {
+    font: 600 17px var(--mono);
+    color: var(--text-strong);
+    line-height: 1;
+}
+
+.score-octave {
+    font: bold 14px var(--mono);
+    line-height: 6px;
+    min-height: 6px;
+}
+
+.score-rest {
+    font: 18px var(--mono);
+    color: var(--faint);
+}
+
+.teach-score-pages {
+    justify-content: center;
+    margin-top: 16px;
+    font-size: 11px;
+}
+
+.teach-key.satisfied,
+.teach-key.peek {
+    background: var(--success-soft);
+    border-color: var(--success);
+}
+
+.teach-key.sharp-key.satisfied,
+.teach-key.sharp-key.peek {
+    background: var(--success);
+}
+
+.next-round-ring {
+    border-style: dashed;
+    opacity: 0.4;
+}
+
+.teach-round-history {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-soft);
+}
+
+.teach-round-history > div {
+    padding: 10px;
+    background: var(--surface-sunken);
+    border-radius: 5px;
+}
+
+.teach-result-main {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin: 18px 0;
+}
+
+.teach-result-main strong {
+    font: 40px var(--mono);
+    color: var(--accent);
+}
+
+.teach-result-counts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 24px;
+    font: 12px var(--mono);
+    margin-bottom: 16px;
+}
+
+.teach-result-counts b {
+    display: block;
+    font-size: 22px;
+    margin-top: 7px;
+    color: var(--text-strong);
+}
+
+#teach-summary {
+    overflow-wrap: anywhere;
+}
+
+#teach-time {
+    font: 11px var(--mono);
+    white-space: nowrap;
+}
+
+#teach-upload:has(input:disabled) {
+    opacity: 0.45;
+    cursor: default;
+}
+
+@media (max-width: 1000px) {
+    .teach-grid {
+        grid-template-columns: minmax(0, 1fr) 235px;
+    }
+}
+
+@media (max-width: 700px) {
+    .teach-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .teach-grid .teach-sidebar {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .teach-stage .keyboard-surround {
+        padding-top: 48px;
+        padding-bottom: 42px;
+    }
+
+    .teach-feedback strong {
+        font-size: 22px;
+    }
+
+    .teach-score {
+        grid-template-columns: minmax(0, 1fr);
+        max-height: 300px;
+    }
+
+    .teach-round-history {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}

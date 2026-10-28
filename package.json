@@ -1,0 +1,22 @@
+{
+  "name": "funcuby",
+  "version": "0.1.0",
+  "private": true,
+  "description": "An unofficial open-source web driver for CubyFun easyplay 1s",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test \"tests/unit/*.test.js\"",
+    "test:e2e": "node tests/e2e/smoke.mjs",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.0",
+    "eslint": "^10.0.0",
+    "globals": "^17.0.0",
+    "prettier": "^3.9.0"
+  }
+}

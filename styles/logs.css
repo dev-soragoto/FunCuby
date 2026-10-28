@@ -1,0 +1,148 @@
+form .primary {
+    margin-top: 16px;
+}
+
+.warning {
+    color: var(--warning);
+    margin-top: 10px;
+}
+
+.log-card {
+    padding: 0;
+    overflow: hidden;
+}
+
+.log-toolbar {
+    padding: 18px 20px;
+    display: flex;
+    gap: 14px;
+    align-items: end;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--line);
+}
+
+.log-toolbar label {
+    margin: 0;
+    max-width: 290px;
+}
+
+.log-toolbar label select {
+    max-width: 100%;
+}
+
+.log-toolbar .search-label {
+    flex: 1;
+    min-width: 160px;
+}
+
+.log-toolbar #pause-logs {
+    margin-left: auto;
+}
+
+.log-toolbar label.button {
+    font-size: 13px;
+}
+
+.table-scroll {
+    overflow: auto;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 12px;
+    text-align: left;
+}
+
+th {
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    font-weight: 500;
+    background: var(--surface-sunken);
+    white-space: nowrap;
+}
+
+td,
+th {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--line-soft);
+}
+
+td {
+    vertical-align: top;
+    line-height: 1.7;
+}
+
+td code {
+    font-size: 11px;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.log-time {
+    font: 10px var(--mono);
+    color: var(--muted);
+    white-space: nowrap;
+}
+
+.direction {
+    font: 10px var(--mono);
+    font-weight: 600;
+    border-radius: 4px;
+    padding: 3px 6px;
+    background: var(--success-soft);
+    color: var(--success);
+}
+
+.direction.TX {
+    color: var(--accent);
+    background: var(--accent-soft);
+}
+
+.direction.ERR {
+    color: var(--danger);
+    background: var(--danger-soft);
+}
+
+.direction.SYS {
+    color: var(--info);
+    background: var(--info-soft);
+}
+
+.source-tag {
+    display: block;
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 4px;
+}
+
+.log-bottom {
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.log-bottom span {
+    font-size: 11px;
+}
+
+.log-hex {
+    min-width: 210px;
+    max-width: 400px;
+    max-height: 68px;
+    overflow: hidden;
+    display: block;
+}
+
+.button {
+    margin: 0;
+}
+
+.empty {
+    text-align: center;
+    padding: 50px;
+    color: var(--faint);
+}

@@ -1,0 +1,567 @@
+{
+  "settings": {
+    "theme": { "label": "Appearance", "light": "Light", "dark": "Dark" },
+    "locale": { "label": "Language" }
+  },
+  "nav": {
+    "label": "Pages",
+    "device": "Device",
+    "send": "Test",
+    "play": "Play",
+    "teach": "Practice",
+    "logs": "Logs"
+  },
+  "common": {
+    "apply": "Apply",
+    "reset": "Reset",
+    "close": "Close",
+    "uploadMidi": "Upload MIDI",
+    "readingMidi": "Reading MIDI…",
+    "connectFirst": "Connect a device first",
+    "untitledTrack": "Track {number}",
+    "sentenceGap": " "
+  },
+  "format": { "timestamp": "With timestamp", "legacy": "No timestamp" },
+  "fields": {
+    "value": "Value",
+    "channel": "Channel",
+    "program": "Program number",
+    "velocity": "Velocity",
+    "pitch": "Pitch",
+    "packetLength": "Packet length",
+    "timestamp": "Timestamp",
+    "byte": "Byte",
+    "offset": "Calibration offset",
+    "bpm": "BPM",
+    "originalBpm": "Original BPM",
+    "computedBpm": "Calculated BPM",
+    "targetShortest": "Target shortest note",
+    "lead": "Approach time",
+    "firstNote": "First-key pitch",
+    "timingOffset": "Fixed offset",
+    "rounds": "Loop rounds"
+  },
+  "app": {
+    "noBluetooth": "Bluetooth is not available here. Use Chrome or Edge on Windows, or Chrome on Android, and open the page over localhost or HTTPS.",
+    "initFailed": "The workbench failed to start: {reason}"
+  },
+  "errors": {
+    "integer": "{field} must be a whole number from {min} to {max}",
+    "positive": "{field} must be greater than 0",
+    "invalidNumber": "Enter a valid value for {field}",
+    "bpmTooLow": "The BPM is too low; the duration is out of range",
+    "trackFormat": "Choose a packet format for the track",
+    "trackMode": "Choose how the track sends notes",
+    "minGap": "The skip-release threshold must be 0–5000 ms",
+    "minDuration": "The shortest note must be 0–5000 ms",
+    "programConflict": "Channel {channel} has conflicting programs. Use one program or pick different channels",
+    "position": "Invalid playback position",
+    "stopPlayback": "Stop the current playback first",
+    "connectFirst": "Connect a device first",
+    "connectAndStop": "Connect a device and stop playback first",
+    "noTrackNotes": "Select at least one track that contains notes",
+    "teachingBusy": "Pause or finish the practice first",
+    "noTiming": "The MIDI file has no timing information. Upload it again",
+    "tooFewTaps": "Fewer than {min} valid presses. Calibrate again",
+    "noWebAudio": "This browser does not support Web Audio. Turn off the metronome to practise",
+    "metronomeBlocked": "The metronome could not start. Click Start again",
+    "od": "OD must be between 0 and 10",
+    "uploadFirst": "Upload a MIDI file first",
+    "uploadAndChoose": "Upload a MIDI file and tick the practice tracks first",
+    "noPracticeNotes": "Choose practice tracks that contain notes",
+    "invalidRange": "Choose a valid A/B practice range",
+    "emptyRange": "The selection has no notes. Adjust the A/B range",
+    "invalidBars": "Enter a valid bar range; the end bar cannot come before the start bar",
+    "invalidGap": "Choose a valid gap between rounds",
+    "hex": "Enter whole hexadecimal bytes, for example 80 80 9F 3C 55",
+    "sleep": "A wait is written as sleep and milliseconds, 0–{max}, decimals allowed",
+    "packetTooLong": "Each packet is at most {max} bytes and is never split",
+    "rawLine": "Line {line}: {reason}",
+    "rawEmpty": "Enter at least one HEX line: one packet per line, with optional sleep lines",
+    "unknownCommand": "Unknown command",
+    "noPitches": "Enter at least one pitch",
+    "tooManyPitches": "At most {max} pitches at a time",
+    "unknownFormat": "Unknown packet format",
+    "messageLength": "The message length does not match its MIDI status byte",
+    "ble": {
+      "ep2": "The selected device is an EP2; this workbench only supports EP1",
+      "noNotify": "The MIDI characteristic does not support notifications",
+      "busy": "Disconnect the current device first",
+      "unavailable": "This browser has no Web Bluetooth. Use Chrome or Edge on Windows, or Chrome on Android, over localhost or HTTPS",
+      "notWritable": "The characteristic does not support writes",
+      "writeFailed": "{label} failed to write: {reason} ({hex})"
+    },
+    "log": {
+      "transaction": "Log transaction failed",
+      "blocked": "The log database is held by another tab. Close the other tabs and reload",
+      "noIndexedDb": "IndexedDB is unavailable",
+      "empty": "The log file is empty",
+      "schema": "Only ep1-log v2 JSONL is supported",
+      "badRow": "Line {line} is not a valid packet",
+      "importUnavailable": "Local storage is unavailable, so logs cannot be imported",
+      "importTooLarge": "Imports are limited to {limit} MB"
+    },
+    "midi": {
+      "truncated": "The MIDI file is incomplete",
+      "variableLength": "A MIDI variable-length value is longer than four bytes",
+      "tooLarge": "MIDI files cannot exceed {limit} MB",
+      "notSmf": "Choose a Standard MIDI File (.mid / .midi)",
+      "format": "MIDI formats 0 and 1 are supported; convert format 2 sequences to format 1 first",
+      "trackCount": "Invalid MIDI track count",
+      "smpte": "Invalid MIDI SMPTE time division",
+      "division": "MIDI ticks per beat cannot be zero",
+      "tooManyEvents": "The MIDI file has more than {limit} events",
+      "missingStatus": "Track {track} is missing a MIDI status byte",
+      "tempoLength": "Invalid MIDI tempo event length",
+      "zeroTempo": "MIDI tempo cannot be zero",
+      "timeSignature": "Invalid MIDI time signature event",
+      "keySignature": "Invalid MIDI key signature event",
+      "endLength": "Invalid MIDI end-of-track event length",
+      "dataByte": "Track {track} has an invalid MIDI data byte",
+      "statusByte": "Track {track} has an invalid SMF status byte",
+      "missingEnd": "Track {track} has no end-of-track event"
+    }
+  },
+  "ble": {
+    "choosing": "Choose an EP1 device",
+    "reconnecting": "Reconnecting to the last device",
+    "connecting": "Connecting and subscribing to MIDI notifications",
+    "ready": "Connected, listening for keys",
+    "readyUnknown": "Connected to the MIDI service, but the advertised name does not match EP1. Check the device",
+    "lost": "The device disconnected",
+    "disconnected": "Disconnected"
+  },
+  "tx": {
+    "manual": "Manual send",
+    "rawLines": "Raw HEX (line by line)",
+    "written": "Written by the browser; the device sends no acknowledgement",
+    "playback": "MIDI playback",
+    "setPrograms": "Playback setup · set programs",
+    "seekRelease": "Playback seek · release notes",
+    "endRelease": "Playback end · release notes"
+  },
+  "rx": {
+    "empty": "Empty notification",
+    "badHeader": "A BLE MIDI header must be 80–BF",
+    "noStatus": "The notification has no MIDI status byte or valid BLE MIDI header",
+    "noTimestampLow": "Missing the BLE MIDI timestamp low byte; switch the receive format to inspect the raw bytes",
+    "previousIncomplete": "The MIDI message from the previous notification is incomplete",
+    "trailingIncomplete": "The MIDI message at the end of the notification is incomplete",
+    "badSysex": "Unrecognised or incomplete SysEx",
+    "sysexRestarted": "SysEx interrupted by a new start byte",
+    "sysexStatus": "SysEx contains an illegal status byte",
+    "sysexOverflow": "SysEx exceeded {max} bytes; the buffer was cleared",
+    "sysexPending": "Waiting for more SysEx segments",
+    "noDataAfterTimestamp": "No MIDI data after the timestamp",
+    "interrupted": "MIDI message interrupted by a new status byte",
+    "unsupportedSystem": "Unsupported system message {status}",
+    "orphanData": "Data byte without a status byte",
+    "reservedChannel": "Channels 15/16 are reserved for a special protocol in the original app and are not normal EP1 keys",
+    "undefinedMessage": "No defined EP1 meaning",
+    "noEvent": "No complete event"
+  },
+  "log": {
+    "actionFailed": "Action failed",
+    "storageFailed": "Saving logs locally failed: {reason}. Only the latest {limit} rows are kept in memory and {unsaved} are unsaved. Export soon; reloading loses unsaved rows.",
+    "ready": "Workbench ready",
+    "readyDetail": "Web only / EP1 / no automatic device commands",
+    "calibrated": "First-key calibration done",
+    "calibrationWaiting": "Waiting for the physical first key",
+    "calibrationCancelled": "First-key calibration cancelled",
+    "manualOffset": "Display offset set manually",
+    "offsetReset": "Display offset reset",
+    "offsetLocal": "offset={offset}, no command sent to the device",
+    "rxFormat": "Receive format changed",
+    "captureOn": "Log capture turned on",
+    "captureOnDetail": "Logs keep appending; no command sent to the device",
+    "captureOff": "Log capture turned off",
+    "captureOffDetail": "New packets are no longer recorded",
+    "sendCancelled": "Pending sends cancelled",
+    "gattIrrevocable": "GATT writes already started cannot be undone"
+  },
+  "device": {
+    "waiting": "Waiting for a keyboard",
+    "unnamed": "Unnamed device",
+    "connection": {
+      "disconnected": "Disconnected",
+      "busy": "Connecting",
+      "ready": "Connected"
+    },
+    "filter": {
+      "label": "Device filter",
+      "service": "By MIDI service",
+      "name": "By EP1 name"
+    },
+    "connect": "Connect",
+    "reconnect": "Reconnect",
+    "disconnect": "Disconnect",
+    "keyboard": {
+      "title": "Keyboard view",
+      "label": "EP1 key state",
+      "held": "Held"
+    },
+    "key": {
+      "pressed": "{note} · MIDI {pitch} · pressed",
+      "released": "{note} · MIDI {pitch} · released"
+    },
+    "lastEvent": {
+      "waiting": "Waiting for the device",
+      "on": "Pressed · MIDI {pitch}",
+      "off": "Released · MIDI {pitch}",
+      "state": "{state} · tick {tick} · EP1 support unverified"
+    },
+    "captureOff": "Log capture is off",
+    "velocity": "Velocity",
+    "channel": "Channel",
+    "rangeWarning": "This pitch is outside the current layout. Check the first-key calibration.",
+    "calibration": {
+      "title": "First-key calibration",
+      "hint": "Press the physical first key to align the layout. Both keyboard views then show the pitches the device actually sends. Only the page display changes.",
+      "offset": "Display offset (semitones)",
+      "start": "Calibrate from first key",
+      "cancel": "Cancel calibration",
+      "waiting": "Press the first key on the physical keyboard; click again to cancel.",
+      "current": "First key: {note} ({pitch})"
+    },
+    "technical": {
+      "title": "Connection and parsing details",
+      "service": "MIDI service",
+      "characteristic": "Characteristic",
+      "properties": "Properties / write mode",
+      "afterConnect": "Shown after connecting",
+      "current": "{properties} · using {mode}",
+      "notWritable": "not writable",
+      "none": "No connected characteristic yet"
+    },
+    "rxFormat": {
+      "label": "Receive format",
+      "auto": "Auto",
+      "raw": "Raw MIDI byte stream",
+      "hint": "Auto prefers 80 80 packets. If timestamps and running status are ambiguous, switch to the timestamped format. Connecting only subscribes to notifications and sends no initialisation commands."
+    }
+  },
+  "send": {
+    "structured": { "title": "Structured message" },
+    "command": {
+      "label": "Action",
+      "on": "Note on",
+      "off": "Note off",
+      "program": "Program change"
+    },
+    "program": "Program number (decimal 0–127)",
+    "pitches": "Pitches (decimal, separated by spaces or commas)",
+    "channel": "Channel (1–16)",
+    "velocity": "Velocity (0–127)",
+    "format": "Packet format",
+    "timestamp": "Timestamp (0–8191 ms)",
+    "rawHex": "Raw HEX",
+    "submit": "Send message ↗",
+    "raw": {
+      "label": "One HEX packet or sleep milliseconds per line",
+      "hintBefore": "One packet per line, never merged and without added headers, up to 512 bytes each. A line",
+      "hintAfter": "waits 101 ms after the previous packet is written before running the next line; decimals allowed, 0–60000 ms. Blank lines are ignored and every line is validated before sending. “Cancel pending” aborts the wait and anything after it.",
+      "submit": "Send line by line"
+    },
+    "pending": { "label": "Pending tasks", "empty": "No pending tasks" },
+    "cancel": "Cancel pending",
+    "written": "Written; this is not an acknowledgement from the device.",
+    "rawDone": {
+      "one": "The line-by-line send finished with {count} packet; a browser write does not mean the device executed it.",
+      "other": "The line-by-line send finished with {count} packets; a browser write does not mean the device executed them."
+    },
+    "cancelled": "Sends that had not started were cancelled; the write in progress will finish normally."
+  },
+  "play": {
+    "chooseFile": "Choose a MIDI file",
+    "start": "Play",
+    "stop": "Stop",
+    "summary": {
+      "one": "{file} · {count} track · {duration}",
+      "other": "{file} · {count} tracks · {duration}"
+    },
+    "tempo": {
+      "noDurations": "Original {bpm} BPM · no note lengths to calculate from",
+      "shortest": "Original {bpm} BPM · shortest note {shortest} ms"
+    },
+    "status": {
+      "playing": "Playing",
+      "stopping": "Stopping…",
+      "ready": "Ready to play",
+      "failed": "Playback failed",
+      "stopped": "Stopped",
+      "finished": "Playback finished"
+    },
+    "noNotes": "This MIDI file has no playable notes.",
+    "skippedReleases": {
+      "one": "{count} short-gap release skipped in this song",
+      "other": "{count} short-gap releases skipped in this song"
+    },
+    "targetShortest": "Target shortest note (ms)",
+    "calculateBpm": "Calculate BPM",
+    "originalBpm": "Original tempo",
+    "progress": "Playback position",
+    "columns": {
+      "selectAll": "All",
+      "track": "Track",
+      "notes": "Notes",
+      "channel": "Channel",
+      "program": "Program",
+      "format": "Format",
+      "mode": "Note messages",
+      "minDuration": "Shortest note (ms)",
+      "minGap": "Skip-release threshold (ms)"
+    },
+    "trackLabel": {
+      "enabled": "Play {name}",
+      "channel": "{name} channel",
+      "program": "{name} program",
+      "format": "{name} packet format",
+      "mode": "{name} note messages",
+      "minDuration": "{name} shortest note (ms)",
+      "minGap": "{name} skip-release threshold (ms)"
+    },
+    "mode": { "pressOnly": "Note on only", "paired": "Note on and off" },
+    "hint": {
+      "lengthen": "Short notes are first stretched to the shortest note length, then overlapping releases of the same pitch are merged",
+      "gap": "A release is skipped when the next press on the same channel and pitch follows within the threshold",
+      "zero": "Set 0 to turn either step off",
+      "program": "Each channel's program is set once when playback starts",
+      "tempo": "Playback works best when the shortest note is about 500 ms; use the target shortest note to calculate the BPM"
+    }
+  },
+  "teach": {
+    "summary": {
+      "empty": "Upload a MIDI file and tick one or more tracks to start practising",
+      "loaded": {
+        "one": "{file} · {count} track · original {bpm} BPM",
+        "other": "{file} · {count} tracks · original {bpm} BPM"
+      },
+      "failed": "Could not read the file. Choose a MIDI file again"
+    },
+    "start": "Start practice",
+    "resume": "Resume",
+    "pause": "Pause",
+    "stop": "End session",
+    "cancelCalibration": "Cancel calibration",
+    "status": {
+      "preparing": "Preparing…",
+      "calibrating": "Calibrating input latency",
+      "paused": "Paused. Click Resume to continue",
+      "waiting": "Waiting for the right notes; the clock is frozen",
+      "playing": "Practising",
+      "pressFirstKey": "Press the physical first key",
+      "connect": "Connect a device on the Device page first",
+      "stopPlayback": "Stop playback first",
+      "noSong": "Upload a MIDI file or calibrate latency first",
+      "ready": "Ready to practise",
+      "noTracks": "Tick at least one practice track",
+      "stopped": "Session ended. You can start again",
+      "finished": "Practice finished. You can start again",
+      "calibrated": "Calibration saved. Ready to practise",
+      "tooFewTaps": "Not enough valid presses. Calibrate again",
+      "mapped": "First-key pitch updated",
+      "disconnected": "The device disconnected. Reconnect to continue",
+      "playbackRunning": "Playback is running. Stop it to continue",
+      "hidden": "The page went to the background. Click Resume to continue",
+      "metronomeSuspended": "The metronome was suspended. Click Resume to continue",
+      "leftPage": "You left the practice page. Click Resume to continue"
+    },
+    "tracks": {
+      "title": "Practice tracks",
+      "empty": "Upload a MIDI file first",
+      "selected": { "one": "{count} selected", "other": "{count} selected" },
+      "none": "None selected",
+      "notes": { "one": "{count} note", "other": "{count} notes" }
+    },
+    "difficulty": {
+      "title": "Timing difficulty",
+      "followUntimed": "Follow mode is not timed",
+      "lenient": "Lenient",
+      "easy": "Easy",
+      "normal": "Normal",
+      "hard": "Hard",
+      "strict": "Strict"
+    },
+    "mode": {
+      "label": "Mode",
+      "rhythm": "Rhythm · keep going after misses",
+      "follow": "Follow · wait for the right keys"
+    },
+    "lead": "Approach time (s)",
+    "metronome": "Metronome",
+    "metronomeToggle": "Enable metronome",
+    "volume": "Click volume",
+    "key": {
+      "major": "{tonic} major · 1={major}",
+      "minor": "{tonic} minor · 1={major} (6={tonic})",
+      "unmarked": "No key signature in the MIDI file · using 1=C",
+      "withChanges": "{key} · with key changes",
+      "perTrack": {
+        "one": "{count} track · keys marked per track",
+        "other": "{count} tracks · keys marked per track"
+      },
+      "uploadFirst": "Upload a MIDI file to read its key",
+      "chooseTracks": "Choose practice tracks to show the key"
+    },
+    "score": {
+      "title": "Numbered score and loop range",
+      "hint": "Click a beat on any track to set A / B, or drag across beats to select a range. All tracks share the range, and B sits after the last selected beat. The bar fields select whole bars. Beats show onsets and held notes; the approach rings set the actual rhythm.",
+      "sheet": "Numbered score of the practice tracks",
+      "prev": "Previous page",
+      "next": "Next page",
+      "empty": "No score yet",
+      "bar": "Bar {bar} · {meter}",
+      "beatLabel": "{track}, {position}",
+      "noteTitle": "{track} · {note} · {key} · beat {beat}",
+      "page": "Page {page} / {pages} · {bars} · {tracks} · {perRow} bars per row",
+      "bars": { "one": "{count} bar", "other": "{count} bars" },
+      "tracks": { "one": "{count} track", "other": "{count} tracks" }
+    },
+    "loop": {
+      "label": "Loop",
+      "count": "Fixed rounds",
+      "infinite": "Endless",
+      "rounds": "Rounds",
+      "gap": "Gap between rounds",
+      "gapNone": "None",
+      "gapOne": "One bar",
+      "gapTwo": "Two bars",
+      "startBar": "Start bar",
+      "endBar": "End bar (inclusive)",
+      "pickA": "Set start A",
+      "pickB": "Set end B",
+      "selectAll": "Whole song",
+      "range": "A: {a} → B: {b} (B excluded)",
+      "position": "bar {bar}, beat {beat}",
+      "barEnd": "end of bar {bar}",
+      "rangeEmpty": "Choose practice tracks to show the range"
+    },
+    "feedback": {
+      "ready": "Ready",
+      "noNotes": "No notes to practise",
+      "countIn": "Get ready {seconds}",
+      "follow": "Follow the rings",
+      "followFirstKey": "Follow the rings on the first key",
+      "waiting": "Waiting for {notes}",
+      "resumeIn": "Resuming in {seconds}",
+      "miss": "Miss",
+      "wrong": "Wrong key",
+      "done": "Done",
+      "sampled": "Sampled",
+      "early": "Finished early",
+      "paused": "Paused",
+      "cancelled": "Cancelled",
+      "stopped": "Practice ended",
+      "finished": "Practice complete",
+      "calibrated": "Calibrated",
+      "recalibrate": "Calibrate again"
+    },
+    "keyboard": "Practice keyboard, absolute pitch",
+    "upcoming": "Upcoming notes",
+    "stats": {
+      "score": "Score",
+      "accuracy": "Accuracy",
+      "combo": "Combo",
+      "completed": "Completed",
+      "waits": "Waits",
+      "wrong": "Wrong keys",
+      "firstRound": "Round 1",
+      "round": "Round {round} / {total}"
+    },
+    "mapping": {
+      "title": "First-key pitch",
+      "hint": "Press the physical first key to align the layout; labels show the pitches the device sends. Shared with the Device page.",
+      "firstNote": "First-key MIDI pitch (0–127)",
+      "apply": "Apply first-key pitch",
+      "current": "First key {note} ({pitch})",
+      "cancel": "Cancel first-key calibration"
+    },
+    "latency": {
+      "title": "Input latency calibration",
+      "hint": "Follow 8 approach rings on the first key and press and release as each ring closes. At least 5 hits are needed; the median timing error is used.",
+      "start": "Start calibration",
+      "offset": "Fixed offset (ms, positive compensates late input)",
+      "current": "Fixed offset {offset}, shared by practice and the metronome"
+    },
+    "rounds": {
+      "title": "Rounds",
+      "round": "Round {round}",
+      "stoppedRound": "Round {round} (ended early)",
+      "follow": "{done}/{total} done · waits: {waits} · wrong keys: {wrong}",
+      "rhythm": "{score} points · {accuracy}% · max combo {combo}",
+      "summaryFollow": {
+        "one": "{count} round · best completion {best}% · average {average}%",
+        "other": "{count} rounds · best completion {best}% · average {average}%"
+      },
+      "summaryRhythm": {
+        "one": "{count} round · best accuracy {best}% · average {average}%",
+        "other": "{count} rounds · best accuracy {best}% · average {average}%"
+      },
+      "recent": "showing the latest {count}"
+    },
+    "results": {
+      "formula": "osu!lazer click-only scoring with no mods or bonuses, out of 1,000,000. Accuracy weights 300 / 100 / 50 / 0",
+      "stoppedTitle": "Session ended · round {round}",
+      "finishedTitle": "Practice complete · round {round}",
+      "context": "{file} · {tracks} · {bpm} BPM.",
+      "rhythmSummary": "Accuracy {accuracy} · max combo {combo} · OD {od}",
+      "followSummary": "Notes completed · waits: {waits} · wrong keys: {wrong}",
+      "followUntimed": "Follow mode is not scored on timing and does not count misses.",
+      "followStopped": "This round ended early.",
+      "followDone": "The selected range is complete.",
+      "noHits": "No notes were hit this time.",
+      "early": "Hits were {error} ms early on average (calibration applied).",
+      "late": "Hits were {error} ms late on average (calibration applied).",
+      "stoppedMisses": "Ended early; unfinished notes count as misses."
+    }
+  },
+  "logs": {
+    "direction": "Direction",
+    "all": "All",
+    "search": "Search",
+    "searchPlaceholder": "Pitch, type, HEX, error…",
+    "start": "Start log capture",
+    "starting": "Starting…",
+    "stop": "Stop log capture",
+    "pauseView": "Pause live view",
+    "resumeView": "Resume live view",
+    "export": "Export JSONL ↓",
+    "import": "Import logs",
+    "delete": "Delete logs",
+    "confirmDelete": "Delete all logs? This cannot be undone.",
+    "exportPartial": "Local storage is unavailable; this export only contains the recent rows kept in memory.",
+    "imported": "The logs were appended to the list; nothing was sent to the device.",
+    "copied": "Raw HEX copied",
+    "more": "Load 200 older",
+    "limitHint": "The list shows up to 500 rows; exports include every saved row.",
+    "empty": {
+      "capturing": "No matching packets. Connect a device to see traffic.",
+      "off": "No matching logs. Turn on capture to record new traffic."
+    },
+    "columns": {
+      "time": "No. / time",
+      "direction": "Direction / source",
+      "message": "Message / status",
+      "hex": "Raw HEX"
+    },
+    "source": {
+      "import": "Imported",
+      "workbench": "Workbench",
+      "device": "Live"
+    },
+    "phase": {
+      "queued": "Queued",
+      "writing": "Writing",
+      "success": "Written",
+      "failed": "Failed",
+      "cancelled": "Cancelled"
+    },
+    "event": { "state": "{state} tick={tick} · EP1 unverified" },
+    "details": "Details",
+    "detail": {
+      "title": "Packet details",
+      "copy": "Copy raw HEX",
+      "unverified": "EP1 hardware support unverified"
+    }
+  }
+}

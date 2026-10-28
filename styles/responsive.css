@@ -1,0 +1,203 @@
+@media (min-width: 1500px) {
+    .keyboard-surround {
+        padding-top: 78px;
+        padding-bottom: 58px;
+    }
+}
+
+@media (max-width: 1000px) {
+    .device-grid {
+        grid-template-columns: minmax(0, 1fr) 235px;
+    }
+
+    .device-bar {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .device-bar .actions {
+        width: 100%;
+    }
+
+    .keyboard-surround {
+        padding-top: 65px;
+        padding-bottom: 50px;
+    }
+
+    .card {
+        padding: 20px;
+    }
+
+    .card-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .sidebar .card {
+        padding: 18px;
+    }
+}
+
+@media (max-width: 700px) {
+    main {
+        padding: 0 14px;
+    }
+
+    .connection {
+        font-size: 10px;
+    }
+
+    .tabs {
+        gap: 0;
+    }
+
+    /* Equal-width tabs: labels stay centred in their slot instead of hugging the screen edges. */
+    .tabs button {
+        flex: 1;
+        padding-inline: 4px;
+        font-size: 12px;
+    }
+
+    .device-grid,
+    .two-column {
+        grid-template-columns: 1fr;
+    }
+
+    .device-bar {
+        padding: 17px;
+    }
+
+    .device-bar .actions {
+        gap: 6px;
+    }
+
+    .device-bar select {
+        flex: 1;
+        min-width: 140px;
+    }
+
+    .device-bar button {
+        flex: 1;
+    }
+
+    .keyboard-surround {
+        padding: 48px 7.3% 42px;
+    }
+
+    .card-heading {
+        flex-direction: row;
+    }
+
+    .keyboard-footer {
+        gap: 10px;
+        font-size: 10px;
+    }
+
+    .sidebar {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .sidebar .card {
+        padding: 15px;
+        min-width: 0;
+    }
+
+    #last-note {
+        font-size: 46px;
+    }
+
+    .metrics {
+        gap: 20px;
+    }
+
+    .calibration button {
+        font-size: 11px;
+        padding: 8px;
+    }
+
+    .inline {
+        flex-wrap: wrap;
+    }
+
+    .inline input {
+        min-width: 55px;
+    }
+
+    .technical-list > div {
+        display: block;
+    }
+
+    .technical-list dd {
+        margin-top: 5px;
+    }
+
+    .section-heading {
+        flex-wrap: wrap;
+    }
+
+    .section-heading > .actions {
+        width: 100%;
+    }
+
+    .log-toolbar {
+        padding: 14px;
+        gap: 10px;
+    }
+
+    .log-toolbar label:first-child {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .log-toolbar .search-label {
+        max-width: 100%;
+    }
+
+    .log-toolbar button,
+    .log-toolbar label.button {
+        font-size: 11px;
+    }
+
+    td,
+    th {
+        padding: 12px;
+    }
+
+    .compact {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .log-bottom {
+        padding: 14px;
+    }
+
+    .log-bottom span {
+        font-size: 10px;
+    }
+}
+
+.circle-key .note {
+    position: relative;
+}
+
+/* Compact page: tabs first, connection state stays with the device. */
+main {
+    padding-top: 18px;
+}
+
+.device-identity .connection {
+    margin-left: 0;
+    margin-top: 7px;
+}
+
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 36px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238a979e' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m7 10 5 5 5-5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px 16px;
+}

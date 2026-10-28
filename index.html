@@ -1,0 +1,984 @@
+<!doctype html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <meta name="color-scheme" content="light dark" />
+        <meta
+            name="theme-color"
+            media="(prefers-color-scheme: light)"
+            content="#f3f8f8"
+            data-scheme="light"
+        />
+        <meta
+            name="theme-color"
+            media="(prefers-color-scheme: dark)"
+            content="#121719"
+            data-scheme="dark"
+        />
+        <title>FunCuby</title>
+        <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+        <link rel="stylesheet" href="./styles/base.css" />
+        <link rel="stylesheet" href="./styles/device.css" />
+        <link rel="stylesheet" href="./styles/play.css" />
+        <link rel="stylesheet" href="./styles/teach.css" />
+        <link rel="stylesheet" href="./styles/logs.css" />
+        <link rel="stylesheet" href="./styles/overlays.css" />
+        <link rel="stylesheet" href="./styles/responsive.css" />
+        <script src="./src/theme-boot.js"></script>
+        <script type="module" src="./src/main.js"></script>
+    </head>
+
+    <body>
+        <main>
+            <header class="app-bar">
+                <span class="brand">FunCuby</span>
+                <div class="app-settings">
+                    <select
+                        id="theme"
+                        data-i18n-attr="aria-label:settings.theme.label"
+                    >
+                        <option
+                            value="light"
+                            data-i18n="settings.theme.light"
+                        ></option>
+                        <option
+                            value="dark"
+                            data-i18n="settings.theme.dark"
+                        ></option>
+                    </select>
+                    <select
+                        id="locale"
+                        data-i18n-attr="aria-label:settings.locale.label"
+                    >
+                        <option value="zh-CN" lang="zh-CN">中文</option>
+                        <option value="en" lang="en">English</option>
+                    </select>
+                </div>
+            </header>
+            <nav class="tabs" data-i18n-attr="aria-label:nav.label">
+                <button
+                    type="button"
+                    data-tab="device"
+                    class="selected"
+                    data-i18n="nav.device"
+                ></button
+                ><button
+                    type="button"
+                    data-tab="send"
+                    data-i18n="nav.send"
+                ></button
+                ><button
+                    type="button"
+                    data-tab="play"
+                    data-i18n="nav.play"
+                ></button
+                ><button
+                    type="button"
+                    data-tab="teach"
+                    data-i18n="nav.teach"
+                ></button
+                ><button
+                    type="button"
+                    data-tab="logs"
+                    data-i18n="nav.logs"
+                ></button>
+            </nav>
+            <div
+                id="notice"
+                role="status"
+                aria-atomic="true"
+                popover="manual"
+            ></div>
+            <section id="panel-device" class="panel">
+                <div class="device-bar card">
+                    <div class="device-identity">
+                        <div>
+                            <h2
+                                id="device-name"
+                                data-i18n="device.waiting"
+                            ></h2>
+                            <span class="connection"
+                                ><i id="status-dot"></i
+                                ><span
+                                    id="connection-text"
+                                    data-i18n="device.connection.disconnected"
+                                ></span
+                            ></span>
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <select
+                            id="scan-filter"
+                            data-i18n-attr="aria-label:device.filter.label"
+                        >
+                            <option
+                                value="service"
+                                data-i18n="device.filter.service"
+                            ></option>
+                            <option
+                                value="name"
+                                data-i18n="device.filter.name"
+                            ></option></select
+                        ><button id="connect" class="primary" type="button">
+                            <span data-i18n="device.connect"></span>
+                            <span>↗</span></button
+                        ><button
+                            id="reconnect"
+                            type="button"
+                            disabled
+                            data-i18n="device.reconnect"
+                        ></button
+                        ><button
+                            id="disconnect"
+                            type="button"
+                            disabled
+                            data-i18n="device.disconnect"
+                        ></button>
+                    </div>
+                </div>
+                <div class="device-grid">
+                    <article class="keyboard-card card">
+                        <div class="card-heading">
+                            <div>
+                                <h2 data-i18n="device.keyboard.title"></h2>
+                            </div>
+                        </div>
+                        <div class="keyboard-surround">
+                            <div class="keyboard-frame">
+                                <div
+                                    id="keyboard"
+                                    class="keys"
+                                    data-i18n-attr="aria-label:device.keyboard.label"
+                                ></div>
+                            </div>
+                        </div>
+                        <div class="keyboard-footer">
+                            <span
+                                ><i class="legend-dot"></i>
+                                <span data-i18n="device.keyboard.held"></span>
+                                <b id="pressed-count">0</b></span
+                            >
+                        </div>
+                    </article>
+                    <aside class="sidebar">
+                        <article class="card">
+                            <div id="last-note">—</div>
+                            <p
+                                id="last-event"
+                                class="muted"
+                                data-i18n="device.lastEvent.waiting"
+                            ></p>
+                            <dl class="metrics">
+                                <div>
+                                    <dt data-i18n="device.velocity"></dt>
+                                    <dd id="last-velocity">—</dd>
+                                </div>
+                                <div>
+                                    <dt data-i18n="device.channel"></dt>
+                                    <dd id="last-channel">—</dd>
+                                </div>
+                            </dl>
+                            <pre id="last-hex"></pre>
+                            <p
+                                id="range-warning"
+                                class="warning"
+                                hidden
+                                data-i18n="device.rangeWarning"
+                            ></p>
+                        </article>
+                        <article class="card calibration">
+                            <h2 data-i18n="device.calibration.title"></h2>
+                            <p
+                                class="muted"
+                                data-i18n="device.calibration.hint"
+                            ></p>
+                            <button id="calibrate" type="button"></button
+                            ><label
+                                for="offset"
+                                data-i18n="device.calibration.offset"
+                            ></label>
+                            <div class="inline">
+                                <input
+                                    id="offset"
+                                    type="number"
+                                    min="-60"
+                                    max="67"
+                                    value="0"
+                                /><button
+                                    id="apply-offset"
+                                    type="button"
+                                    data-i18n="common.apply"
+                                ></button
+                                ><button
+                                    id="reset-offset"
+                                    type="button"
+                                    data-i18n="common.reset"
+                                ></button>
+                            </div>
+                            <p id="calibration-status" class="muted"></p>
+                        </article>
+                    </aside>
+                </div>
+                <details class="card technical">
+                    <summary data-i18n="device.technical.title"></summary>
+                    <dl class="technical-list">
+                        <div>
+                            <dt data-i18n="device.technical.service"></dt>
+                            <dd id="service-id"></dd>
+                        </div>
+                        <div>
+                            <dt
+                                data-i18n="device.technical.characteristic"
+                            ></dt>
+                            <dd id="characteristic-id"></dd>
+                        </div>
+                        <div>
+                            <dt data-i18n="device.technical.properties"></dt>
+                            <dd
+                                id="properties"
+                                data-i18n="device.technical.afterConnect"
+                            ></dd>
+                        </div>
+                    </dl>
+                    <label
+                        ><span data-i18n="device.rxFormat.label"></span>
+                        <select id="rx-format">
+                            <option
+                                value="auto"
+                                data-i18n="device.rxFormat.auto"
+                            ></option>
+                            <option
+                                value="ble"
+                                data-i18n="format.timestamp"
+                            ></option>
+                            <option
+                                value="legacy"
+                                data-i18n="format.legacy"
+                            ></option>
+                            <option
+                                value="raw"
+                                data-i18n="device.rxFormat.raw"
+                            ></option></select
+                    ></label>
+                    <p class="muted" data-i18n="device.rxFormat.hint"></p>
+                </details>
+            </section>
+            <section id="panel-send" class="panel" hidden>
+                <div class="two-column">
+                    <article class="card">
+                        <h2 data-i18n="send.structured.title"></h2>
+                        <form id="send-form">
+                            <label
+                                ><span data-i18n="send.command.label"></span
+                                ><select id="command">
+                                    <option
+                                        value="on"
+                                        data-i18n="send.command.on"
+                                    ></option>
+                                    <option
+                                        value="off"
+                                        data-i18n="send.command.off"
+                                    ></option>
+                                    <option
+                                        value="program"
+                                        data-i18n="send.command.program"
+                                    ></option></select></label
+                            ><label id="program-field" hidden
+                                ><span data-i18n="send.program"></span
+                                ><input
+                                    id="program-number"
+                                    type="number"
+                                    min="0"
+                                    max="127"
+                                    value="2"
+                                    required
+                                    disabled /></label
+                            ><label
+                                ><span data-i18n="send.pitches"></span
+                                ><input
+                                    id="pitches"
+                                    value="60 64 67"
+                                    placeholder="60 64 67"
+                                    required
+                            /></label>
+                            <div class="two-column compact">
+                                <label
+                                    ><span data-i18n="send.channel"></span
+                                    ><input
+                                        id="channel"
+                                        type="number"
+                                        min="1"
+                                        max="16"
+                                        value="16"
+                                        required /></label
+                                ><label
+                                    ><span data-i18n="send.velocity"></span
+                                    ><input
+                                        id="velocity"
+                                        type="number"
+                                        min="0"
+                                        max="127"
+                                        value="85"
+                                        required
+                                /></label>
+                            </div>
+                            <label
+                                ><span data-i18n="send.format"></span
+                                ><select id="tx-format">
+                                    <option
+                                        value="timestamp"
+                                        data-i18n="format.timestamp"
+                                    ></option>
+                                    <option
+                                        value="legacy"
+                                        data-i18n="format.legacy"
+                                    ></option></select></label
+                            ><label id="tx-timestamp-field"
+                                ><span data-i18n="send.timestamp"></span
+                                ><input
+                                    id="tx-timestamp"
+                                    type="number"
+                                    min="0"
+                                    max="8191"
+                                    step="1"
+                                    value="0"
+                                    required
+                            /></label>
+                            <p class="muted" data-i18n="send.rawHex"></p>
+                            <pre id="send-preview"></pre>
+                            <button
+                                class="primary"
+                                type="submit"
+                                data-i18n="send.submit"
+                            ></button>
+                        </form>
+                    </article>
+                    <article class="card">
+                        <h2 data-i18n="send.rawHex"></h2>
+                        <form id="raw-form">
+                            <label
+                                ><span data-i18n="send.raw.label"></span
+                                ><textarea
+                                    id="raw-hex"
+                                    rows="7"
+                                    spellcheck="false"
+                                >
+80 80 9F 3C 55</textarea>
+                            </label>
+                            <p class="muted">
+                                <span data-i18n="send.raw.hintBefore"></span>
+                                <code>sleep 101</code>
+                                <span data-i18n="send.raw.hintAfter"></span>
+                            </p>
+                            <button
+                                type="submit"
+                                data-i18n="send.raw.submit"
+                            ></button>
+                        </form>
+                        <label
+                            ><span data-i18n="send.pending.label"></span
+                            ><textarea
+                                id="pending-tasks"
+                                rows="7"
+                                spellcheck="false"
+                                readonly
+                                data-i18n-attr="placeholder:send.pending.empty"
+                            ></textarea></label
+                        ><button
+                            id="cancel-send"
+                            type="button"
+                            data-i18n="send.cancel"
+                        ></button>
+                    </article>
+                </div>
+            </section>
+            <section id="panel-play" class="panel" hidden>
+                <article class="card performance-card">
+                    <p
+                        id="midi-summary"
+                        class="muted"
+                        data-i18n="play.chooseFile"
+                    ></p>
+                    <div class="play-controls">
+                        <label class="button"
+                            ><span data-i18n="common.uploadMidi"></span
+                            ><input
+                                id="midi-file"
+                                type="file"
+                                accept=".mid,.midi,audio/midi,audio/x-midi"
+                                hidden /></label
+                        ><button
+                            id="play-midi"
+                            class="primary"
+                            type="button"
+                            disabled
+                            data-i18n="play.start"
+                        ></button
+                        ><button
+                            id="stop-midi"
+                            type="button"
+                            disabled
+                            data-i18n="play.stop"
+                        ></button
+                        ><span id="play-status" class="muted"></span>
+                    </div>
+                    <div class="play-timeline">
+                        <span id="play-elapsed">0:00</span>
+                        <input
+                            id="play-progress"
+                            type="range"
+                            min="0"
+                            max="1"
+                            step="1"
+                            value="0"
+                            data-i18n-attr="aria-label:play.progress"
+                            disabled
+                        />
+                        <span id="play-duration">0:00</span>
+                    </div>
+                    <div id="tempo-controls" class="tempo-controls">
+                        <label
+                            >BPM<input
+                                id="play-bpm"
+                                type="number"
+                                min="0"
+                                step="any"
+                                value="120"
+                                required
+                                disabled /></label
+                        ><label
+                            ><span data-i18n="play.targetShortest"></span
+                            ><input
+                                id="tempo-min-note"
+                                type="number"
+                                min="0"
+                                step="any"
+                                value="500"
+                                required
+                                disabled /></label
+                        ><button
+                            id="calculate-bpm"
+                            type="button"
+                            disabled
+                            data-i18n="play.calculateBpm"
+                        ></button
+                        ><button
+                            id="original-bpm"
+                            type="button"
+                            disabled
+                            data-i18n="play.originalBpm"
+                        ></button
+                        ><span id="tempo-info" class="muted"></span>
+                    </div>
+                    <p id="play-timing" class="muted play-hint" hidden></p>
+                    <div class="table-scroll">
+                        <table class="track-table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <label class="track-select-all"
+                                            ><input
+                                                id="select-all-tracks"
+                                                type="checkbox"
+                                                disabled /><span
+                                                data-i18n="play.columns.selectAll"
+                                            ></span
+                                        ></label>
+                                    </th>
+                                    <th data-i18n="play.columns.track"></th>
+                                    <th data-i18n="play.columns.notes"></th>
+                                    <th data-i18n="play.columns.channel"></th>
+                                    <th data-i18n="play.columns.program"></th>
+                                    <th data-i18n="play.columns.format"></th>
+                                    <th data-i18n="play.columns.mode"></th>
+                                    <th
+                                        data-i18n="play.columns.minDuration"
+                                    ></th>
+                                    <th data-i18n="play.columns.minGap"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="midi-tracks"></tbody>
+                        </table>
+                    </div>
+                    <p class="muted play-hint">
+                        <span data-i18n="play.hint.lengthen"></span><br /><span
+                            data-i18n="play.hint.gap"
+                        ></span
+                        ><br /><span data-i18n="play.hint.zero"></span
+                        ><br /><span data-i18n="play.hint.program"></span
+                        ><br /><span data-i18n="play.hint.tempo"></span>
+                    </p>
+                </article>
+            </section>
+            <section id="panel-teach" class="panel" hidden>
+                <article class="card performance-card">
+                    <p
+                        id="teach-summary"
+                        class="muted"
+                        data-i18n="teach.summary.empty"
+                    ></p>
+                    <div class="play-controls">
+                        <label class="button" id="teach-upload"
+                            ><span data-i18n="common.uploadMidi"></span
+                            ><input
+                                id="teach-file"
+                                type="file"
+                                accept=".mid,.midi,audio/midi,audio/x-midi"
+                                hidden /></label
+                        ><button
+                            id="teach-start"
+                            class="primary"
+                            type="button"
+                            disabled
+                            data-i18n="teach.start"
+                        ></button
+                        ><button
+                            id="teach-pause"
+                            type="button"
+                            disabled
+                        ></button
+                        ><button id="teach-stop" type="button" disabled></button
+                        ><span
+                            id="teach-status"
+                            class="muted"
+                            role="status"
+                        ></span>
+                    </div>
+                    <div class="teach-picker-grid">
+                        <fieldset
+                            id="teach-track-picker"
+                            class="teach-track-picker"
+                            disabled
+                        >
+                            <legend>
+                                <span data-i18n="teach.tracks.title"></span>
+                                <span
+                                    id="teach-track-count"
+                                    class="muted"
+                                ></span>
+                            </legend>
+                            <div id="teach-tracks" class="teach-tracks">
+                                <p
+                                    class="muted"
+                                    data-i18n="teach.tracks.empty"
+                                ></p>
+                            </div>
+                        </fieldset>
+                        <fieldset
+                            id="teach-difficulty-picker"
+                            class="teach-difficulty-picker"
+                        >
+                            <legend>
+                                <span data-i18n="teach.difficulty.title"></span>
+                                <span
+                                    id="teach-difficulty-status"
+                                    class="muted"
+                                    hidden
+                                    data-i18n="teach.difficulty.followUntimed"
+                                ></span>
+                            </legend>
+                            <div
+                                id="teach-difficulties"
+                                class="teach-difficulties"
+                            ></div>
+                        </fieldset>
+                    </div>
+                    <div class="tempo-controls teach-settings">
+                        <label
+                            ><span data-i18n="teach.mode.label"></span
+                            ><select id="teach-mode">
+                                <option
+                                    value="rhythm"
+                                    data-i18n="teach.mode.rhythm"
+                                ></option>
+                                <option
+                                    value="follow"
+                                    data-i18n="teach.mode.follow"
+                                ></option></select></label
+                        ><label
+                            >BPM<input
+                                id="teach-bpm"
+                                type="number"
+                                min="1"
+                                max="1000"
+                                step="any"
+                                value="120"
+                                disabled
+                                required /></label
+                        ><label
+                            ><span data-i18n="teach.lead"></span
+                            ><input
+                                id="teach-lead"
+                                type="number"
+                                min="0.5"
+                                max="3"
+                                step="0.1"
+                                value="1.5"
+                                required
+                        /></label>
+                        <div
+                            class="teach-metronome"
+                            role="group"
+                            aria-labelledby="teach-metronome-title"
+                        >
+                            <span
+                                id="teach-metronome-title"
+                                data-i18n="teach.metronome"
+                            ></span>
+                            <div class="teach-metronome-box">
+                                <input
+                                    id="teach-metronome"
+                                    type="checkbox"
+                                    data-i18n-attr="aria-label:teach.metronomeToggle"
+                                />
+                                <input
+                                    id="teach-volume"
+                                    type="range"
+                                    min="0"
+                                    max="100"
+                                    value="35"
+                                    data-i18n-attr="aria-label:teach.volume"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                <article class="card teach-score-card">
+                    <div class="card-heading">
+                        <div>
+                            <h2 data-i18n="teach.score.title"></h2>
+                        </div>
+                        <span id="teach-score-key" class="muted"></span>
+                    </div>
+                    <div class="tempo-controls teach-loop-settings">
+                        <label
+                            ><span data-i18n="teach.loop.label"></span
+                            ><select id="teach-loop-mode">
+                                <option
+                                    value="count"
+                                    selected
+                                    data-i18n="teach.loop.count"
+                                ></option>
+                                <option
+                                    value="infinite"
+                                    data-i18n="teach.loop.infinite"
+                                ></option></select></label
+                        ><label
+                            ><span data-i18n="teach.loop.rounds"></span
+                            ><input
+                                id="teach-loop-count"
+                                type="number"
+                                min="1"
+                                max="999"
+                                step="1"
+                                value="4" /></label
+                        ><label
+                            ><span data-i18n="teach.loop.gap"></span
+                            ><select id="teach-loop-gap">
+                                <option
+                                    value="0"
+                                    data-i18n="teach.loop.gapNone"
+                                ></option>
+                                <option
+                                    value="1"
+                                    selected
+                                    data-i18n="teach.loop.gapOne"
+                                ></option>
+                                <option
+                                    value="2"
+                                    data-i18n="teach.loop.gapTwo"
+                                ></option></select></label
+                        ><label
+                            ><span data-i18n="teach.loop.startBar"></span
+                            ><input
+                                id="teach-loop-start"
+                                type="number"
+                                min="1"
+                                step="1"
+                                value="1" /></label
+                        ><label
+                            ><span data-i18n="teach.loop.endBar"></span
+                            ><input
+                                id="teach-loop-end"
+                                type="number"
+                                min="1"
+                                step="1"
+                                value="1"
+                        /></label>
+                    </div>
+                    <div class="play-controls teach-score-tools">
+                        <button
+                            id="teach-pick-a"
+                            type="button"
+                            aria-pressed="true"
+                            data-i18n="teach.loop.pickA"
+                        ></button
+                        ><button
+                            id="teach-pick-b"
+                            type="button"
+                            aria-pressed="false"
+                            data-i18n="teach.loop.pickB"
+                        ></button
+                        ><button
+                            id="teach-select-all"
+                            type="button"
+                            data-i18n="teach.loop.selectAll"
+                        ></button
+                        ><span id="teach-loop-range" class="muted"></span>
+                    </div>
+                    <p class="muted play-hint" data-i18n="teach.score.hint"></p>
+                    <div
+                        id="teach-score-sheet"
+                        class="teach-score"
+                        data-i18n-attr="aria-label:teach.score.sheet"
+                    ></div>
+                    <div class="play-controls teach-score-pages">
+                        <button
+                            id="teach-score-prev"
+                            type="button"
+                            data-i18n="teach.score.prev"
+                        ></button
+                        ><span id="teach-score-page" class="muted"></span
+                        ><button
+                            id="teach-score-next"
+                            type="button"
+                            data-i18n="teach.score.next"
+                        ></button>
+                    </div>
+                </article>
+                <div class="teach-grid">
+                    <article class="card keyboard-card teach-stage">
+                        <div class="card-heading">
+                            <span id="teach-time" class="muted"
+                                >0:00 / 0:00</span
+                            >
+                        </div>
+                        <div class="teach-feedback" aria-live="polite">
+                            <strong
+                                id="teach-feedback"
+                                data-i18n="teach.feedback.ready"
+                            ></strong>
+                        </div>
+                        <div class="keyboard-surround">
+                            <div class="keyboard-frame">
+                                <div
+                                    id="teach-keyboard"
+                                    class="keys"
+                                    data-i18n-attr="aria-label:teach.keyboard"
+                                ></div>
+                            </div>
+                        </div>
+                        <div
+                            class="teach-upcoming"
+                            id="teach-upcoming"
+                            data-i18n-attr="aria-label:teach.upcoming"
+                        ></div>
+                        <div class="keyboard-footer">
+                            <span
+                                ><span
+                                    id="teach-score-label"
+                                    data-i18n="teach.stats.score"
+                                ></span>
+                                <b id="teach-score">0</b></span
+                            ><span
+                                ><span
+                                    id="teach-accuracy-label"
+                                    data-i18n="teach.stats.accuracy"
+                                ></span>
+                                <b id="teach-accuracy">0.00%</b></span
+                            ><span
+                                ><span
+                                    id="teach-combo-label"
+                                    data-i18n="teach.stats.combo"
+                                ></span>
+                                <b id="teach-combo">0</b></span
+                            ><span id="teach-count" class="muted">0 / 0</span
+                            ><span
+                                id="teach-round"
+                                class="muted"
+                                data-i18n="teach.stats.firstRound"
+                            ></span>
+                        </div>
+                    </article>
+                    <aside class="sidebar teach-sidebar">
+                        <article class="card calibration">
+                            <h2 data-i18n="teach.mapping.title"></h2>
+                            <p class="muted" data-i18n="teach.mapping.hint"></p>
+                            <button id="teach-map" type="button"></button
+                            ><label
+                                ><span
+                                    data-i18n="teach.mapping.firstNote"
+                                ></span
+                                ><input
+                                    id="teach-first-note"
+                                    type="number"
+                                    min="0"
+                                    max="127"
+                                    step="1"
+                                    value="60" /></label
+                            ><button
+                                id="teach-apply-map"
+                                type="button"
+                                data-i18n="teach.mapping.apply"
+                            ></button>
+                            <p id="teach-mapping" class="muted"></p>
+                        </article>
+                        <article class="card calibration">
+                            <h2 data-i18n="teach.latency.title"></h2>
+                            <p class="muted" data-i18n="teach.latency.hint"></p>
+                            <button
+                                id="teach-calibrate"
+                                type="button"
+                                data-i18n="teach.latency.start"
+                            ></button
+                            ><label
+                                ><span data-i18n="teach.latency.offset"></span
+                                ><input
+                                    id="teach-offset"
+                                    type="number"
+                                    min="-1000"
+                                    max="1000"
+                                    step="1"
+                                    value="0"
+                            /></label>
+                            <div class="inline">
+                                <button
+                                    id="teach-apply-offset"
+                                    type="button"
+                                    data-i18n="common.apply"
+                                ></button
+                                ><button
+                                    id="teach-reset-offset"
+                                    type="button"
+                                    data-i18n="common.reset"
+                                ></button>
+                            </div>
+                            <p id="teach-calibration-info" class="muted"></p>
+                        </article>
+                    </aside>
+                </div>
+                <article
+                    id="teach-round-results"
+                    class="card teach-results"
+                    hidden
+                >
+                    <h2 data-i18n="teach.rounds.title"></h2>
+                    <p id="teach-round-summary" class="muted"></p>
+                    <div
+                        id="teach-round-history"
+                        class="teach-round-history"
+                    ></div>
+                </article>
+                <article
+                    id="teach-results"
+                    class="card teach-results"
+                    hidden
+                    aria-live="polite"
+                >
+                    <h2 id="teach-result-title"></h2>
+                    <div class="teach-result-main">
+                        <strong id="teach-final-score">0</strong
+                        ><span id="teach-final-accuracy" class="muted"></span>
+                    </div>
+                    <div
+                        id="teach-result-counts"
+                        class="teach-result-counts"
+                    ></div>
+                    <p id="teach-result-timing" class="muted"></p>
+                    <p
+                        id="teach-score-formula"
+                        class="muted play-hint"
+                        data-i18n="teach.results.formula"
+                    ></p>
+                </article>
+            </section>
+            <section id="panel-logs" class="panel" hidden>
+                <div class="card log-card">
+                    <div class="log-toolbar">
+                        <label
+                            ><span data-i18n="logs.direction"></span
+                            ><select id="direction">
+                                <option
+                                    value="all"
+                                    data-i18n="logs.all"
+                                ></option>
+                                <option>RX</option>
+                                <option>TX</option>
+                                <option>SYS</option>
+                                <option>ERR</option>
+                            </select></label
+                        ><label class="search-label"
+                            ><span data-i18n="logs.search"></span
+                            ><input
+                                id="search"
+                                type="search"
+                                data-i18n-attr="placeholder:logs.searchPlaceholder"
+                        /></label>
+                        <button id="pause-logs" type="button"></button
+                        ><button
+                            id="toggle-logging"
+                            class="primary"
+                            type="button"
+                        ></button
+                        ><button
+                            id="export"
+                            type="button"
+                            data-i18n="logs.export"
+                        ></button
+                        ><label class="button"
+                            ><span data-i18n="logs.import"></span
+                            ><input
+                                id="import"
+                                type="file"
+                                accept=".jsonl,.ndjson,.json"
+                                hidden /></label
+                        ><button
+                            id="delete-logs"
+                            type="button"
+                            data-i18n="logs.delete"
+                        ></button>
+                    </div>
+                    <div class="table-scroll">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th data-i18n="logs.columns.time"></th>
+                                    <th data-i18n="logs.columns.direction"></th>
+                                    <th data-i18n="logs.columns.message"></th>
+                                    <th data-i18n="logs.columns.hex"></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="log-rows"></tbody>
+                        </table>
+                    </div>
+                    <div class="log-bottom">
+                        <button
+                            id="more-logs"
+                            type="button"
+                            data-i18n="logs.more"
+                        ></button
+                        ><span class="muted" data-i18n="logs.limitHint"></span>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <dialog id="detail-dialog">
+            <div class="section-heading">
+                <h2 data-i18n="logs.detail.title"></h2>
+                <button
+                    id="close-detail"
+                    type="button"
+                    data-i18n="common.close"
+                ></button>
+            </div>
+            <pre id="detail-content"></pre>
+            <button
+                id="copy-detail"
+                type="button"
+                data-i18n="logs.detail.copy"
+            ></button>
+        </dialog>
+    </body>
+</html>

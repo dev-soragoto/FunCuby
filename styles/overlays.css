@@ -1,0 +1,48 @@
+#notice {
+    position: fixed;
+    inset: auto;
+    top: max(20px, env(safe-area-inset-top));
+    left: 50%;
+    transform: translateX(-50%);
+    width: max-content;
+    max-width: min(440px, calc(100vw - 32px));
+    padding: 10px 16px;
+    border: 1px solid color-mix(in srgb, var(--warning) 30%, transparent);
+    border-radius: 10px;
+    background: var(--warning-soft);
+    color: var(--warning);
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.6;
+    text-align: center;
+    overflow-wrap: anywhere;
+    box-shadow: 0 8px 28px var(--shadow);
+    pointer-events: none;
+}
+
+#notice.error {
+    color: var(--danger);
+    border-color: color-mix(in srgb, var(--danger) 30%, transparent);
+    background: var(--danger-soft);
+}
+
+dialog {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    width: min(760px, calc(100vw - 28px));
+    max-height: 85vh;
+    padding: 24px;
+    color: inherit;
+    background: var(--surface);
+}
+
+dialog::backdrop {
+    background: var(--backdrop);
+    backdrop-filter: blur(2px);
+}
+
+dialog pre {
+    max-height: 55vh;
+    overflow: auto;
+    margin-bottom: 16px;
+}
